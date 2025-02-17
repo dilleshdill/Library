@@ -3,25 +3,18 @@ import SearchModel from "../models/Search.js";
 
 const searchItem=async(req,res)=>{
     const {email,searchTerm}=req.body
-    console.log(email,searchTerm)
     const user = await SearchModel.findOne({email})
     if(!user){
         const data = await SearchModel.create({
             email,
-            search:[
-                {
-                    value:searchTerm
-                }
-            ]
-        })
-        res.status(200).json({message:"success"})
-    }
-    else{
-        user.search.push({
             value:searchTerm
         })
+        return res.status(200).json({message:"success"})
+    }
+    else{
+        user.value=searchTerm
         await user.save()
-        return res.status(201).json({message:"success"})
+        return res.status(200).json({message:"success"})
     }
     
     
@@ -37,13 +30,11 @@ const getSearchItem = async (req, res) => {
     try {
         const user = await SearchModel.findOne({ email });
 
-        if (!user || !user.search.length) {
-            return res.status(404).json({ message: "No search history found" });
+        if (!user || !user.value) {
+            return res.status(200).json({ value:"" });
         }
 
-        const lastSearchItem = user.search[user.search.length - 1];
-
-        return res.status(200).json(lastSearchItem);
+        return res.status(200).json({ value: user.value });
     } catch (error) {
         console.error("Error fetching search item:", error);
         return res.status(500).json({ message: "Internal server error" });

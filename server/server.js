@@ -4,11 +4,11 @@ import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import Auth from "./routes/RegisterRoute.js";
 import cookieParser from "cookie-parser";
-
 import adminRoute from "./routes/adminRoute.js";
 import FavoriteRoute from "./routes/favoriteRoute.js";
 import WishlistRoute from "./routes/wishlistRoute.js";
 import searchRoute from "./routes/searchRoute.js";
+import addressRoute from "./routes/addressRoute.js";
 
 // Config
 // dotenv.config();
@@ -29,6 +29,7 @@ app.use("/admin", adminRoute);
 app.use("/", FavoriteRoute);
 app.use("/getSearch", searchRoute);
 app.use("/books", WishlistRoute);
+app.use("/address",addressRoute)
 app.get("/", (req, res) => {
     res.send("Welcome to Library backend.");
 });

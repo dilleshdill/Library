@@ -6,9 +6,12 @@ import 'reactjs-popup/dist/index.css';
 import UserHeader from "./UserHeader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+
+
 const Favorite = () => {
     const [cart, setCart] = useState([]);
-
+    const Navigate = useNavigate()
     useEffect(() => {
         const fetchData = async () => {
             const email = localStorage.getItem("email");
@@ -180,7 +183,7 @@ const Favorite = () => {
                                 <p className="text-2xl font-bold text-gray-800">Total:</p>
                                 <p>₹{total.toFixed(2)}</p>
                             </div>
-                            <button className="w-full py-2 mt-4 !bg-gray-800 text-white">Checkout</button>
+                            <button onClick={()=>Navigate('/address')} className="w-full py-2 mt-4 !bg-gray-800 text-white">Checkout</button>
                         </div>
                     </div>
                 </div>

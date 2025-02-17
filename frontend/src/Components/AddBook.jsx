@@ -55,7 +55,7 @@ const AddBook = () => {
                     className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                     >
                     <option selected id="fiction" value="Fiction">Fiction</option>
-                    <option id="non_fiction" value="Non-Fiction">Non-Fiction</option>
+                    <option id="non-fiction" value="Non-Fiction">Non-Fiction</option>
                     <option id="mystery" value="Mystery">Mystery</option>
                     <option id="fantasy" value="Fantasy">Fantasy</option>
                     <option id="science_fiction" value="Science Fiction">Science Fiction</option>

@@ -16,6 +16,7 @@ import ProductDetails from './Components/ProductDetails';
 import CustomerDetails from './Components/CustomerDetails';
 import Homepage from './HomePage/HomePage';
 import Wishlist from './Wishlist/Wishlist';
+import Address from './Components/Address';
 
 const App = () =>{
   return(
@@ -35,6 +36,7 @@ const App = () =>{
         <Route path = '/books/:_id' element = {<ProductDetails/>}/>
         <Route path = '/customerdetails' element = {<CustomerDetails/>}/>
         <Route path = '/wishlist' element = {<Wishlist/>}/>
+        <Route path = '/address' element = {<Address/>}/>
        </Routes>
     </BrowserRouter>
   )

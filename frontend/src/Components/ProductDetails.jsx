@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 const data = [
   { id: 1, image: "https://d2g9wbak88g7ch.cloudfront.net/productimages/mainimages/372/9781572245372.jpg" },
   { id: 2, image: "https://d2g9wbak88g7ch.cloudfront.net/productimages/mainimages/372/9781572245372.jpg" },
@@ -136,6 +137,7 @@ const ProductDetails = () => {
   return (
     <div className="bg-gray-100 min-h-screen w-screen p-6 flex justify-center">
       <ToastContainer />
+      
       <div className="w-full h-[50%] rounded-lg p-6">
         {/* Book Image Section */}
         <div className="flex flex-col md:pl-30 md:flex-row">
@@ -189,8 +191,8 @@ const ProductDetails = () => {
             </div>
 
             {buy ? (
-              <button onClick={() => toggleFavorite(book)} className="!bg-gray-800 text-white px-6 py-2 rounded">
-                Add Favorite
+              <button onClick={() => toggleFavorite(book)} className="!bg-gray-800 text-white md:w-[30%] md:mt-5 px-6 py-2 rounded">
+                Add To Cart
               </button>
             ) : (
               <div>

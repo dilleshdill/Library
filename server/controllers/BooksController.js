@@ -46,17 +46,18 @@ const getAllBooks = async (req, res) => {
 
 const getSearchBooks = async (req, res) => {
   const { bookName } = req.query;
-  console.log(bookName)
+  console.log(bookName.toLowerCase())
   if (!bookName) {
       const books = await BooksModel.find();
       return res.status(200).json(books);
   }
 
   try {
-      console.log("Searching for:", bookName);
 
       const books = await BooksModel.find();
-      const searchFilter = books.filter(eachItem=>eachItem.book_name==bookName)
+      const searchFilter = books.filter(eachItem =>eachItem.book_name.toLowerCase().includes(bookName.toLowerCase()));
+      
+      console.log(bookName.toLowerCase())
       if (searchFilter.length === 0) {
           return res.status(200).json([]);
       }

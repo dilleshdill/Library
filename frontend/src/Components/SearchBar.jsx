@@ -29,6 +29,7 @@ const SearchBar = ({doRefresh}) => {
     const handleSearch=async()=>{
         try{
             const email = localStorage.getItem("email")
+            if (!email) return;
             const response=await axios.post('http://localhost:5002/getSearch',{
                 email,
                 searchTerm,

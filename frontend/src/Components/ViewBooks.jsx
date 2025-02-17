@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SearchBar from "./SearchBar";
 
-const ViewBooks = () => {
+const ViewBooks = ({selectedFilters}) => {
     const [books, setBooks] = useState([]);
     const [cartBooks, setCartBooks] = useState([]);
     const [likedBooks,setLikedBooks] = useState([])
@@ -17,21 +17,26 @@ const ViewBooks = () => {
 
     useEffect(() => {  
         fetchBooksAndFavorites();
-    },[refresh]);
+    },[refresh,selectedFilters]);
 
     const fetchBooksAndFavorites = async () => {
         try {
             const email = localStorage.getItem("email")
             const searchItem = await axios.get(`http://localhost:5002/getSearch?email=${email}`);
+            const searchTerm = searchItem.data.value || "";
+            const booksResponse = await axios.get(`http://localhost:5002/admin/book?bookName=${searchTerm}`);
+            if (selectedFilters.length ===0){
+                setBooks(booksResponse.data);
+            }
+            console.log(booksResponse.data)
+            if (selectedFilters.length !== 0) {
+                const lowerCaseCategories = selectedFilters.map(cat => cat.toLowerCase());
+                const filteredBooks = booksResponse.data.filter(book => 
+                    book.catogory && lowerCaseCategories.includes(book.catogory.toLowerCase())
+                );
             
-            const value = searchItem.data.value
-            const booksResponse = await axios.get(`http://localhost:5002/admin/book?bookName=${value}`);
-            setBooks(booksResponse.data);
-            
-            
-           
-
-           
+                setBooks(filteredBooks);
+            }
             if (email) {
                 const favResponse = await axios.get(`http://localhost:5002/favorite?email=${email}`);
                 setCartBooks(favResponse.data);
