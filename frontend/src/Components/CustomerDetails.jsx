@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const CustomerDetails = ({ selectedAddress }) => {
   const [email, setEmail] = useState("");
@@ -10,7 +14,8 @@ const CustomerDetails = ({ selectedAddress }) => {
   const [state, setState] = useState("");
   const [pincode, setPincode] = useState("");
   const [village, setVillage] = useState("");
-  const [address, setAddress] = useState([]);
+  const [refresh,setRefresh] = useState(false)
+  
   const statesList = [
     { id: "state-ap", label: "Andhra Pradesh" },
     { id: "state-ar", label: "Arunachal Pradesh" },
@@ -50,14 +55,119 @@ const CustomerDetails = ({ selectedAddress }) => {
     { id: "state-py", label: "Puducherry" },
   ];
 
-  const handleSubmit = (e) => {
+  const showToast = (message, type = "success") => {
+                  toast[type](message, {
+                      position: "top-right",
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      theme: "light",
+                  });
+   };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    await saveAddress();
+    setRefresh(prev => !prev);
     setIsOpen(false);
-  };
+};
 
   useEffect(() => {
+    if (selectedAddress) {
+      setName(selectedAddress.name);
+      setPhoneNo(selectedAddress.phone_no);
+      setStreet(selectedAddress.street);
+      setDistrict(selectedAddress.district);
+      setState(selectedAddress.state);
+      setPincode(selectedAddress.pincode);
+      setVillage(selectedAddress.village);
+    }
     setEmail(localStorage.getItem("email"));
-  }, []);
+    // fetchData()
+  }, [refresh,selectedAddress]);
+
+
+  const saveAddress = async () => {
+    try {
+        const response = await axios.post("http://localhost:5002/address/edit", {
+            _id: selectedAddress._id,
+            email,
+            name,
+            phone_no,
+            street,
+            district,
+            state,
+            pincode,
+            village
+        });
+
+        if (response.status === 200) {
+            showToast("Address edit successfully","success")
+            setIsOpen(false);
+            // fetchData();
+        }
+    } catch (error) {
+        console.error("Error updating address:", error);
+    }
+};
+
+const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+            );
+            const data = await response.json();
+            if (data.address) {
+              setStreet(data.address.road || "");
+              setDistrict(data.address.state_district || "");
+              setState(data.address.state || "");
+              setPincode(data.address.postcode || "");
+              setVillage(data.address.county || "");
+            }
+          } catch (error) {
+            showToast("Error fetching location details", "error");
+          }
+        },
+        (error) => {
+          showToast(error.message, "error");
+        }
+      );
+    } else {
+      showToast("Geolocation is not supported by this browser.", "error");
+    }
+  };
+
+//   const fetchData = async () => {
+//     try {
+//         const email = localStorage.getItem("email");
+//         if (!email) return;
+
+//         const response = await axios.get(`http://localhost:5002/address?email=${email}`);
+//         if (response.status === 200) {
+//             const getEdit = response.data?.find(eachItem => eachItem._id === selectedAddress?._id);
+//             console.log(getEdit)
+
+//             if (getEdit) {
+//                 setName(getEdit.name);
+//                 setPhoneNo(getEdit.phone_no);
+//                 setStreet(getEdit.street);
+//                 setDistrict(getEdit.district);
+//                 setState(getEdit.state);
+//                 setPincode(getEdit.pincode);
+//                 setVillage(getEdit.village);
+//             }
+//         }
+//     } catch (e) {
+//         console.log("Error fetching address:", e);
+//     }
+// };
+
 
   if (!selectedAddress) {
     return (
@@ -69,6 +179,7 @@ const CustomerDetails = ({ selectedAddress }) => {
 
   return (
     <div className="bg-gray-50 dark:bg-gray-800 w-full xl:w-96 flex justify-between items-center md:items-start px-4 py-6 md:p-6 xl:p-8 flex-col">
+      <ToastContainer/>
       <h3 className="text-xl dark:text-white font-semibold leading-5 text-gray-800">
         Customer
       </h3>
@@ -140,6 +251,7 @@ const CustomerDetails = ({ selectedAddress }) => {
                     />
                   </div>
                 </div>
+                <button onClick={getLocation} className="!bg-blue-400 text-white" style={{ border: 0, outline: 0 }}>Use current Location</button>
                 <div>
                   <label className="block text-gray-700 dark:text-gray-300 font-medium">
                     Street Address
@@ -213,6 +325,7 @@ const CustomerDetails = ({ selectedAddress }) => {
                 <button
                   type="submit"
                   className="w-full !bg-blue-400 text-white py-3 rounded-md hover:bg-blue-700 transition"
+                  
                 >
                   Save Address
                 </button>

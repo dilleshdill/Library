@@ -4,7 +4,7 @@ import ViewBooks from "./ViewBooks";
 const Dashboard = () =>{
   
   return(
-    <div className="flex w-screen">
+    <div className="flex w-screen min-h-screen">
       <div className="w-[15%]">
         <Sidebar/>
       </div>

@@ -46,7 +46,7 @@ const ViewBooks = ({selectedFilters}) => {
                 setLikedBooks(favResponse.data);
             }
         } catch (error) {
-            console.error("Error fetching books or favorites:", error);
+            console.log("Error fetching books or favorites:", error);
         } finally {
             setLoading(false);
         }

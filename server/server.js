@@ -9,7 +9,8 @@ import FavoriteRoute from "./routes/favoriteRoute.js";
 import WishlistRoute from "./routes/wishlistRoute.js";
 import searchRoute from "./routes/searchRoute.js";
 import addressRoute from "./routes/addressRoute.js";
-
+import chatRouter from "./routes/ChatRoutes.js";
+import messageRouter from "./routes/MessageRoute.js";
 // Config
 // dotenv.config();
 
@@ -29,7 +30,9 @@ app.use("/admin", adminRoute);
 app.use("/", FavoriteRoute);
 app.use("/getSearch", searchRoute);
 app.use("/books", WishlistRoute);
-app.use("/address",addressRoute)
+app.use("/address",addressRoute);
+app.use("/chat",chatRouter);
+app.use("/message",messageRouter)
 app.get("/", (req, res) => {
     res.send("Welcome to Library backend.");
 });

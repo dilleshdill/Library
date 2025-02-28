@@ -17,6 +17,10 @@ import CustomerDetails from './Components/CustomerDetails';
 import Homepage from './HomePage/HomePage';
 import Wishlist from './Wishlist/Wishlist';
 import Address from './Components/Address';
+import LocationFetcher from './Location/Location';
+import Payment from './Components/Payment';
+import ChatApp from './Components/Chat/UserChat';
+import AdminRegister from './Components/AdminRegister';
 
 const App = () =>{
   return(
@@ -29,6 +33,7 @@ const App = () =>{
         <Route path ='/sidebar' element = {<Sidebar />} />
         <Route path ='/dashboard' element ={<Dashboard />} />
         <Route path='/adminLogin' element = {<AdminLogin />} />
+        <Route path='/adminregister' element = {<AdminRegister />} />
         <Route path='/addbook' element = {<AddBook/>} />
         <Route path = '/viewbooks' element = {<ViewBooks/>}/>
         <Route path = '/books' element = {<Books/>}/>
@@ -37,6 +42,9 @@ const App = () =>{
         <Route path = '/customerdetails' element = {<CustomerDetails/>}/>
         <Route path = '/wishlist' element = {<Wishlist/>}/>
         <Route path = '/address' element = {<Address/>}/>
+        <Route path='/location' element = {<LocationFetcher/>}/>
+        <Route path='/payment' element = {<Payment/>}/>
+        <Route path='/chat' element = {<ChatApp/>}/>
        </Routes>
     </BrowserRouter>
   )

@@ -20,6 +20,9 @@ const AddressForm = () => {
     const [village, setVillage] = useState('');
     const [address, setAddress] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState(null);
+    const [location, setLocation] = useState({ latitude: null, longitude: null });
+    const [getaddress, setgetAddress] = useState(null);
+    const [error, setError] = useState(null);
     const Navigate = useNavigate();
 
     const statesList = [
@@ -105,7 +108,6 @@ const AddressForm = () => {
             fetchData();
             showToast("Address added successfully","success")
             setIsOpen(false);
-
             setName('');
             setPhoneNo('');
             setStreet('');
@@ -137,6 +139,42 @@ const AddressForm = () => {
             }
         } catch (error) {
             console.log("Error deleting address", error);
+        }
+    };
+
+    const getLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    setLocation({ latitude, longitude });
+                    setLatAndLong(latitude, longitude);
+                },
+                (error) => {
+                    setError(error.message);
+                }
+            );
+        } else {
+            setError("Geolocation is not supported by this browser.");
+        }
+    };
+
+    const setLatAndLong = async (lat, lon) => {
+        try {
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+            );
+            const data = await response.json();
+            setgetAddress(data.address);
+            if (data.address) {
+                setStreet(data.address.road || "");
+                setDistrict(data.address.state_district || "");
+                setState(data.address.state || "");
+                setPincode(data.address.postcode || "");
+                setVillage(data.address.county || "");
+            }
+        } catch (error) {
+            setError("Error fetching address");
         }
     };
 
@@ -214,7 +252,7 @@ const AddressForm = () => {
                             Add Address
                         </button>
                         <button
-                            onClick={() => Navigate('/books')}
+                            onClick={() => Navigate('/payment')}
                             className="px-6 py-3 text-white !bg-blue-500 rounded-md hover:!bg-blue-700 transition duration-300"
                         >
                             Place Order
@@ -246,35 +284,44 @@ const AddressForm = () => {
                                         <input type="text" placeholder="Enter street" value={street} onChange={(e) => setStreet(e.target.value)}
                                             className="w-full p-3 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
                                     </div>
+                                    <button onClick={getLocation} className="!bg-blue-400 text-white" style={{ border: 0, outline: 0 }}>Use current Location</button>
                                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                         <div>
                                             <label className="block text-gray-700 dark:text-gray-300 font-medium">District</label>
-                                            <input type="text" placeholder="District" value={district} onChange={(e) => setDistrict(e.target.value)}
+                                            <input type="text" placeholder="Enter district" value={district} onChange={(e) => setDistrict(e.target.value)}
                                                 className="w-full p-3 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
                                         </div>
                                         <div>
                                             <label className="block text-gray-700 dark:text-gray-300 font-medium">State</label>
-                                            <select value={state} onChange={(e) => setState(e.target.value)} className="w-full p-3 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
-                                                <option value="" disabled>Select State</option>
-                                                {statesList.map((state) => (
+                                            <select value={state} onChange={(e) => setState(e.target.value)} 
+                                                className="w-full p-3 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                                <option value="">Select State</option>
+                                                {statesList.map(state => (
                                                     <option key={state.id} value={state.label}>{state.label}</option>
                                                 ))}
                                             </select>
                                         </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                         <div>
-                                            <label className="block text-gray-700 dark:text-gray-300 font-medium">PinCode</label>
-                                            <input type="text" placeholder="PinCode" value={pincode} onChange={(e) => setPincode(e.target.value)}
+                                            <label className="block text-gray-700 dark:text-gray-300 font-medium">Pincode</label>
+                                            <input type="text" placeholder="Enter pincode" value={pincode} onChange={(e) => setPincode(e.target.value)}
                                                 className="w-full p-3 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
                                         </div>
                                         <div>
                                             <label className="block text-gray-700 dark:text-gray-300 font-medium">Village</label>
-                                            <input type="text" placeholder="Village" value={village} onChange={(e) => setVillage(e.target.value)}
+                                            <input type="text" placeholder="Enter village" value={village} onChange={(e) => setVillage(e.target.value)}
                                                 className="w-full p-3 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
                                         </div>
                                     </div>
-                                    <button type="submit" className="w-full !bg-blue-400 text-white py-3 rounded-md hover:bg-blue-700 transition">
-                                        Save Address
-                                    </button>
+                                    <div className="flex justify-center mt-6">
+                                        <button type="submit"
+                                            className="px-6 py-3 text-white !bg-blue-500 rounded-md hover:!bg-blue-700 transition duration-300"
+                                            style={{ border: 0, outline: 0 }}
+                                        >
+                                            Save Address
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
