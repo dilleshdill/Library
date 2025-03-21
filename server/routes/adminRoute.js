@@ -5,6 +5,7 @@ import express from "express";
 const adminRoute = express.Router();
 
 adminRoute.post('/login', adminLogin);
+
 adminRoute.post('/register', addAdmin);
 adminRoute.post('/add-book', addBook);
 adminRoute.get('/book',getAllBooks);

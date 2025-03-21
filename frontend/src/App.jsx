@@ -21,7 +21,9 @@ import LocationFetcher from './Location/Location';
 import Payment from './Components/Payment';
 import ChatApp from './Components/Chat/UserChat';
 import AdminRegister from './Components/AdminRegister';
-
+import AdminChatApp from './Components/Chat/AdminChat';
+import ProtuctedRoute from './Components/ProtuctedRoute';
+import AdminSelectedChatApp from './Components/Chat/AdminSelectedChat';
 const App = () =>{
   return(
     <BrowserRouter>
@@ -29,22 +31,26 @@ const App = () =>{
         <Route path='/login' element={<Login />} />
         <Route path="/" element={<Homepage />} />
         <Route path='/register' element= {<Register />} />
-        <Route path ='/header' element = {<Header />} />
-        <Route path ='/sidebar' element = {<Sidebar />} />
-        <Route path ='/dashboard' element ={<Dashboard />} />
-        <Route path='/adminLogin' element = {<AdminLogin />} />
-        <Route path='/adminregister' element = {<AdminRegister />} />
-        <Route path='/addbook' element = {<AddBook/>} />
-        <Route path = '/viewbooks' element = {<ViewBooks/>}/>
-        <Route path = '/books' element = {<Books/>}/>
-        <Route path = '/favorite' element = {<Favorite/>}/>
-        <Route path = '/books/:_id' element = {<ProductDetails/>}/>
-        <Route path = '/customerdetails' element = {<CustomerDetails/>}/>
-        <Route path = '/wishlist' element = {<Wishlist/>}/>
-        <Route path = '/address' element = {<Address/>}/>
-        <Route path='/location' element = {<LocationFetcher/>}/>
-        <Route path='/payment' element = {<Payment/>}/>
-        <Route path='/chat' element = {<ChatApp/>}/>
+        <Route element = {<ProtuctedRoute/>}>
+          <Route path ='/header' element = {<Header />} />
+          <Route path ='/sidebar' element = {<Sidebar />} />
+          <Route path ='/dashboard' element ={<Dashboard />} />
+          <Route path='/adminLogin' element = {<AdminLogin />} />
+          <Route path='/adminregister' element = {<AdminRegister />} />
+          <Route path='/addbook' element = {<AddBook/>} />
+          <Route path = '/viewbooks' element = {<ViewBooks/>}/>
+          <Route path = '/books' element = {<Books/>}/>
+          <Route path = '/favorite' element = {<Favorite/>}/>
+          <Route path = '/books/:_id' element = {<ProductDetails/>}/>
+          <Route path = '/customerdetails' element = {<CustomerDetails/>}/>
+          <Route path = '/wishlist' element = {<Wishlist/>}/>
+          <Route path = '/address' element = {<Address/>}/>
+          <Route path='/location' element = {<LocationFetcher/>}/>
+          <Route path='/payment' element = {<Payment/>}/>
+          <Route path='/chat' element = {<ChatApp/>}/>
+          <Route path='/adminchat' element = {<AdminChatApp/>}/>
+          <Route path="/adminchat/:id" element={<AdminSelectedChatApp />} />
+        </Route>
        </Routes>
     </BrowserRouter>
   )

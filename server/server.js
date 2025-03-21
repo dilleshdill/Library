@@ -2,6 +2,10 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
+import { Server } from "socket.io";
+import http from "http";
+import setUpSocket from "./socket/index.js";
+// Routes
 import Auth from "./routes/RegisterRoute.js";
 import cookieParser from "cookie-parser";
 import adminRoute from "./routes/adminRoute.js";
@@ -21,6 +25,16 @@ app.use(cors({
     credentials: true,
 }));
 
+// Socket
+const server = http.createServer(app)
+export const io = new Server(server, {
+    cors: {
+        origin: ["http://localhost:5173", "http://localhost:5174"],
+        credentials: true,
+    },
+});
+setUpSocket(io)
+
 // Routes
 app.use(cookieParser());
 app.use(express.json());
@@ -39,7 +53,7 @@ app.get("/", (req, res) => {
 
 // Server
 const PORT = process.env.PORT || 5002;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     connectDB();
     console.log(`Server running on port ${PORT}`);
 });

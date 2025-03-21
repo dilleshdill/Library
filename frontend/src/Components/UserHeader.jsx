@@ -1,59 +1,36 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie"; // Ensure Cookies is imported
 
 const UserHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+  const jwt_token = Cookies.get("jwt_token");
+
+  const links = [
+    { to: "/", label: "Home" },
+    { to: "/", label: "Categories" },
+    { to: "/books", label: "Books" },
+    { to: "/chat", label: "Chat" },
+    { to: "/", label: "Orders" },
+    { to: "/wishlist", label: "Wishlist" },
+    { to: "/favorite", label: "Cart" },
+  ];
 
   return (
     <nav className="relative w-screen flex items-center justify-between sm:h-16 md:justify-between py-4 px-6 bg-white shadow-md text-gray-600 mt-0">
       {/* Desktop Menu */}
       <div className="hidden md:flex md:space-x-10">
-      <Link
-          to="/"
-          className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
-        >
-          Home
-        </Link>
-        <Link
-          to="/"
-          className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
-        >
-          Categories
-        </Link>
-        <Link
-          to="/books"
-          className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
-        >
-          Books
-        </Link>
-        <Link
-          to="/chat"
-          className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
-        >
-          Chat
-        </Link>
-        <Link
-          to="/"
-          className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
-        >
-          Orders
-        </Link>
-        <Link
-          to="/wishlist"
-          className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
-        >
-          Wishlist
-        </Link>
-        <Link
-          to="/favorite"
-          className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
-        >
-          Cart
-        </Link>
+        {links.map((link) => (
+          <Link
+            key={link.to}
+            to={link.to}
+            className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
+          >
+            {link.label}
+          </Link>
+        ))}
       </div>
 
       {/* Mobile Menu Button (Hamburger) */}
@@ -98,71 +75,38 @@ const UserHeader = () => {
             />
           </svg>
         </button>
-        <Link
-          to="/"
-          className="block py-2 px-4 text-gray-600 hover:text-gray-900"
-          onClick={toggleMenu}
-        >
-          Home
-        </Link>
-        <Link
-          to="/"
-          className="block py-2 px-4 text-gray-600 hover:text-gray-900"
-          onClick={toggleMenu}
-        >
-          Categories
-        </Link>
-        <Link
-          to="/books"
-          className="block py-2 px-4 text-gray-600 hover:text-gray-900"
-          onClick={toggleMenu}
-        >
-          Books
-        </Link>
-        <Link
-          to="/chat"
-          className="block py-2 px-4 text-gray-600 hover:text-gray-900"
-          onClick={toggleMenu}
-        >
-          Chat
-        </Link>
-        <Link
-          to="/"
-          className="block py-2 px-4 text-gray-600 hover:text-gray-900"
-          onClick={toggleMenu}
-        >
-          Orders
-        </Link>
-        <Link
-          to="/wishlist"
-          className="block py-2 px-4 text-gray-600 hover:text-gray-900"
-          onClick={toggleMenu}
-        >
-          Wishlist
-        </Link>
-        <Link
-          to="/favorite"
-          className="block py-2 px-4 text-gray-600 hover:text-gray-900"
-          onClick={toggleMenu}
-        >
-          Cart
-        </Link>
+        {links.map((link) => (
+          <Link
+            key={link.to}
+            to={link.to}
+            className="block py-2 px-4 text-gray-600 hover:text-gray-900"
+            onClick={toggleMenu}
+          >
+            {link.label}
+          </Link>
+        ))}
       </div>
 
       {/* Right-side Login/Logout Buttons */}
       <div className="hidden md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
-        <Link
-          to="/login"
-          className="inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium !text-gray-600 hover:!text-gray-900 focus:outline-none transition duration-150 ease-in-out"
-        >
-          Login
-        </Link>
-        <Link
-          to="/"
-          className="inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md !text-white bg-gray-800 hover:bg-black focus:outline-none transition duration-150 ease-in-out ml-2"
-        >
-          Logout
-        </Link>
+        {jwt_token ? (
+          <div
+            onClick={() => {
+              Cookies.remove("jwt_token");
+              window.location.reload();
+            }}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md !text-white bg-gray-800 hover:bg-black focus:outline-none transition duration-150 ease-in-out ml-2"
+          >
+            Logout
+          </div>
+        ) : (
+          <Link
+            to="/login"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium !text-gray-600 hover:!text-gray-900 focus:outline-none transition duration-150 ease-in-out"
+          >
+            Login
+          </Link>
+        )}
       </div>
     </nav>
   );

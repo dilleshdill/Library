@@ -60,5 +60,37 @@ const userLogin = async (req, res) => {
     }
 };
 
-export { addUser, userLogin };
+const getuserDetails = async (req, res) => {
+    try {
+        const userId = req.params._id; // Extract user ID from route params
+        const user = await userRegisterModel.findById(userId); // Fetch user from database
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: "Error fetching user", error });
+    }
+};
+const getId =async (req,res)=>{
+    const { email } = req.body;
+
+  try {
+    const user = await userRegisterModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Send structured JSON response
+    res.status(200).json({ id: user._id });
+  } catch (error) {
+    console.error("Error fetching user ID:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export { addUser, userLogin,getuserDetails,getId };
 

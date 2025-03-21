@@ -1,12 +1,26 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { toast,ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const showToast = (message, type = "success") => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+    });
+  };
   const toLogin = async (event) => {
     event.preventDefault();
     try {
@@ -15,21 +29,28 @@ const Login = () => {
         { email, password },
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true,  // ✅ Include credentials (cookies)
+          withCredentials: true,
         }
       );
-
-      alert("Login successful");
+  
+      const { jwtToken } = response.data;
+      showToast("Login successful", "success");
+  
+      Cookies.set("jwt_token", jwtToken, { expires: 30 });
       localStorage.setItem("email", email);
+  
       navigate("/books");
     } catch (error) {
-      console.error("Login Failed:", error);
-      alert(error.response?.data?.message || "Incorrect username or password.");
+      const errorMessage =
+        error.response?.data?.message || "Incorrect username or password.";
+      showToast(errorMessage, "error");
     }
   };
+  
 
   return (
     <div className="font-[sans-serif] max-sm:px-4 md:w-screen flex justify-center items-center w-screen">
+      <ToastContainer />
       <div className="md:max-w-md w-full px-6 py-6 shadow-md rounded-lg">
         <form onSubmit={toLogin}>
           <div className="mb-12">
@@ -126,7 +147,10 @@ const Login = () => {
                 type="checkbox"
                 className="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
-              <label htmlFor="remember-me" className="ml-3 block text-sm text-gray-800">
+              <label
+                htmlFor="remember-me"
+                className="ml-3 block text-sm text-gray-800"
+              >
                 Remember me
               </label>
             </div>
