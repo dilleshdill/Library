@@ -120,7 +120,7 @@ export default function ChatMessages() {
       </div>
 
       {/* Message Input Section */}
-      <div className="bg-gray-100 px-6 py-4 w-full shadow-lg">
+      <div className="bg-gray-100 px-6 py-4 w-full shadow-lg sticky bottom-0 ">
         <div className="flex items-center">
           <input
             className="flex-1 border rounded-full py-3 px-6 mr-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
