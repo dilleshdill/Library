@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
-
 
 const socket = io("http://localhost:5002", {
   autoConnect: false,
@@ -16,6 +15,13 @@ export default function ChatMessages() {
   const { id } = useParams();
   const userId = "67c1fc23d5acdd3f5e2c1371"; // Current user ID (replace with dynamic value)
 
+  const messagesEndRef = useRef(null);
+
+  // Function to scroll to the latest message
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   // Fetch messages for the current chat
   useEffect(() => {
     const getMessages = async () => {
@@ -25,18 +31,25 @@ export default function ChatMessages() {
         console.log("Chat details:", res.data);
         const response = await axios.get(`http://localhost:5002/message/${id}`);
         setMessages(response.data); // Store messages in state
+        scrollToBottom(); // Scroll to the latest message
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
     };
-    if (id){        
-       socket.connect()
-       getMessages()
-       socket.emit("join",id)
-       socket.on("receive-message", ()=>{
-        getMessages()
+
+    if (id) {
+      socket.connect();
+      getMessages();
+      socket.emit("join", id);
+
+      socket.on("receive-message", () => {
+        getMessages();
       });
+
+      return () => {
+        socket.off("receive-message");
       };
+    }
   }, [id]);
 
   // Send a new message
@@ -58,6 +71,8 @@ export default function ChatMessages() {
       // Update UI immediately (Optimistic Update)
       setMessages((prev) => [...prev, response.data]);
       setText(""); // Clear input after sending
+
+      scrollToBottom(); // Scroll to the latest message
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -77,7 +92,7 @@ export default function ChatMessages() {
             {msg.senderId !== userId && (
               <img
                 className="w-10 h-10 rounded-full mr-3"
-                src="https://picsum.photos/50/50"
+                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                 alt="User Avatar"
               />
             )}
@@ -95,12 +110,13 @@ export default function ChatMessages() {
             {msg.senderId === userId && (
               <img
                 className="w-10 h-10 rounded-full ml-3"
-                src="https://picsum.photos/50/50"
+                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                 alt="User Avatar"
               />
             )}
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Message Input Section */}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import UserHeader from "../UserHeader";
 import { io } from "socket.io-client";
 import axios from "axios";
@@ -15,6 +15,12 @@ export default function ChatApp() {
   const [userId, setUserId] = useState("");
   const [chatId, setChatId] = useState("");
 
+  const messagesEndRef = useRef(null);
+
+  // Scroll to the bottom of the chat
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     const initializeChat = async () => {
@@ -22,21 +28,17 @@ export default function ChatApp() {
         const email = localStorage.getItem("email");
         if (!email) return;
 
-        // Fetch user ID from backend
+        // 1. Fetch user ID
         const { data: userData } = await axios.post(
           "http://localhost:5002/api/auth/userid",
           { email },
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
 
         const { id } = userData;
         setUserId(id);
 
-
-        // Fetch chat ID using userId
+        // 2. Fetch chat and messages
         const { data: chatData } = await axios.get(
           `http://localhost:5002/chat/${id}`
         );
@@ -45,18 +47,20 @@ export default function ChatApp() {
           const chatId = chatData[0]._id;
           setChatId(chatId);
           socket.emit("join", chatId);
-          // Fetch existing messages
+
           const { data: messageData } = await axios.get(
             `http://localhost:5002/message/${chatId}`
           );
 
-          // Ensure correct sender mapping
+          // Ensure consistent message structure
           const formattedMessages = messageData.map((msg) => ({
-            ...msg,
+            id: msg._id,
+            text: msg.text,
             sender: msg.senderId === id ? "me" : "other",
           }));
 
           setMessages(formattedMessages);
+          scrollToBottom();
         }
       } catch (error) {
         console.error("Error initializing chat:", error);
@@ -65,50 +69,51 @@ export default function ChatApp() {
 
     socket.connect();
     initializeChat();
-    
-    socket.on("receive-message", ()=>{
-      initializeChat()
+
+    // 3. Listen for incoming messages
+    socket.on("receive-message", (newMessage) => {
+      setMessages((prev) => {
+        // Check if message already exists (to prevent duplication)
+        if (prev.some((msg) => msg.id === newMessage._id)) return prev;
+
+        return [
+          ...prev,
+          {
+            id: newMessage._id,
+            text: newMessage.text,
+            sender: newMessage.senderId === userId ? "me" : "other",
+          },
+        ];
+      });
+
+      scrollToBottom();
     });
 
     return () => {
+      socket.off("receive-message");
       socket.off("join");
     };
-  }, []);
+  }, [userId]);
 
+  // Send message function
   const sendMessage = async () => {
-    if (!text.trim() || !chatId || !userId) return; // Validate before sending
+    if (!text.trim() || !chatId || !userId) return;
 
     try {
-      const newMessage = {
-        chatId,
-        senderId: userId,
-        text,
-      };
+      const newMessage = { chatId, senderId: userId, text };
 
-      // Store message in database
+      // Send message to backend
       const { data: sentMessage } = await axios.post(
         "http://localhost:5002/message",
         newMessage,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
-      // Emit message via socket to notify the recipient
-      socket.emit("send-message", newMessage);
+      // Emit message to socket (no need to manually update messages state)
+      socket.emit("send-message", sentMessage);
 
-      // Optimistic UI update
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1,
-          text: sentMessage.text,
-          sender: "me",
-        },
-      ]);
-
-      setText(""); // Clear input after sending
+      // Clear the input field
+      setText("");
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -116,9 +121,8 @@ export default function ChatApp() {
 
   return (
     <div className="h-screen w-screen flex flex-col items-center">
-      {/* User Header */}
       <UserHeader className="w-screen" />
-  
+
       {/* Chat Container */}
       <div className="bg-gray-200 flex-1 overflow-y-scroll p-4 w-screen">
         {messages.map((msg) => (
@@ -130,33 +134,34 @@ export default function ChatApp() {
           >
             {msg.sender !== "me" && (
               <img
-                className="w-8 h-8 rounded-full mr-3"
-                src="https://picsum.photos/50/50"
+                className="w-8 h-8 rounded-full mr-3 self-end"
+                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                 alt="User Avatar"
               />
             )}
-  
+
             <div
-              className={`rounded-lg p-3 shadow max-w-lg w-auto ${
+              className={`rounded-lg p-3 shadow max-w-xs ${
                 msg.sender === "me"
-                  ? "bg-blue-500 text-white"
-                  : "bg-white text-gray-800"
+                  ? "bg-blue-500 text-white rounded-br-none"
+                  : "bg-white text-gray-800 rounded-bl-none"
               }`}
             >
               {msg.text}
             </div>
-  
+
             {msg.sender === "me" && (
               <img
-                className="w-8 h-8 rounded-full ml-3"
-                src="https://picsum.photos/50/50"
+                className="w-8 h-8 rounded-full ml-3 self-end"
+                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                 alt="User Avatar"
               />
             )}
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
-  
+
       {/* Input Box */}
       <div className="bg-gray-100 px-4 py-2 w-screen">
         <div className="flex items-center w-full">
