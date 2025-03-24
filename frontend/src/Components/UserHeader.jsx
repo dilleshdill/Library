@@ -1,19 +1,20 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import Cookies from "js-cookie"; // Ensure Cookies is imported
+import { Link, useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const UserHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation(); // Get the current path
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const jwt_token = Cookies.get("jwt_token");
 
   const links = [
     { to: "/", label: "Home" },
-    { to: "/", label: "Categories" },
+    { to: "/categories", label: "Categories" },
     { to: "/books", label: "Books" },
     { to: "/chat", label: "Chat" },
-    { to: "/", label: "Orders" },
+    { to: "/orders", label: "Orders" },
     { to: "/wishlist", label: "Wishlist" },
     { to: "/favorite", label: "Cart" },
   ];
@@ -26,7 +27,9 @@ const UserHeader = () => {
           <Link
             key={link.to}
             to={link.to}
-            className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
+            className={`font-medium transition duration-150 ease-in-out ${
+              location.pathname === link.to ? "!text-black" : "!text-gray-600"
+            } hover:!text-gray-900`}
           >
             {link.label}
           </Link>
@@ -59,28 +62,14 @@ const UserHeader = () => {
           isMenuOpen ? "block" : "hidden"
         } md:hidden absolute top-0 left-0 w-full bg-white shadow-md p-4`}
       >
-        <button className="text-gray-600 hover:text-gray-900 focus:outline-none" onClick={toggleMenu}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
         {links.map((link) => (
           <Link
             key={link.to}
             to={link.to}
-            className="block py-2 px-4 text-gray-600 hover:text-gray-900"
             onClick={toggleMenu}
+            className={`block py-2 px-4 transition duration-150 ease-in-out ${
+              location.pathname === link.to ? "!text-gray-900" : "!text-gray-600"
+            } hover:!text-gray-900`}
           >
             {link.label}
           </Link>

@@ -18,12 +18,17 @@ import Homepage from './HomePage/HomePage';
 import Wishlist from './Wishlist/Wishlist';
 import Address from './Components/Address';
 import LocationFetcher from './Location/Location';
-import Payment from './Components/Payment';
+import PaymentButton from './Components/Payment';
 import ChatApp from './Components/Chat/UserChat';
 import AdminRegister from './Components/AdminRegister';
 import AdminChatApp from './Components/Chat/AdminChat';
 import ProtuctedRoute from './Components/ProtuctedRoute';
 import AdminSelectedChatApp from './Components/Chat/AdminSelectedChat';
+import PaymentSuccess from './Components/PaymentSuccess';
+import Orders from './Components/Orders';
+import OrderArrived from './Components/OrderArrived';
+
+
 const App = () =>{
   return(
     <BrowserRouter>
@@ -46,10 +51,13 @@ const App = () =>{
           <Route path = '/wishlist' element = {<Wishlist/>}/>
           <Route path = '/address' element = {<Address/>}/>
           <Route path='/location' element = {<LocationFetcher/>}/>
-          <Route path='/payment' element = {<Payment/>}/>
+          <Route path='/payment' element = {<PaymentButton/>}/>
           <Route path='/chat' element = {<ChatApp/>}/>
           <Route path='/adminchat' element = {<AdminChatApp/>}/>
           <Route path="/adminchat/:id" element={<AdminSelectedChatApp />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders-arrived" element={<OrderArrived />} />
         </Route>
        </Routes>
     </BrowserRouter>

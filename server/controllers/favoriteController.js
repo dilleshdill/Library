@@ -95,4 +95,23 @@ const setIncrement = async (req, res) => {
     }
 };
 
-export { addFavorite, setLike, removeFavorite, setIncrement };
+const clearFavorites=async (req, res) => {
+    const { email } = req.body;
+    try {
+      if (!email) throw new Error("Email is required");
+  
+      const updated = await FavoriteModel.findOneAndUpdate(
+        { email },
+        { $set: { favorites: [] } },
+        { new: true }
+      );
+  
+      if (!updated) throw new Error("User not found");
+      res.status(200).send("Favorites cleared successfully");
+    } catch (error) {
+      console.error("Error clearing favorites:", error.message);
+      res.status(500).send(`Internal server error: ${error.message}`);
+    }
+  };
+
+export { addFavorite, setLike, removeFavorite, setIncrement,clearFavorites };

@@ -111,6 +111,8 @@ const Favorite = () => {
     const subtotal = cart.reduce((total, item) => total + item.price * item.count, 0);
     const tax = subtotal * 0.1;
     const total = subtotal + tax;
+    localStorage.setItem('price', total);
+
 
     return (
         <div className="w-full h-full bg-white bg-opacity-90 fixed top-0 overflow-y-auto">
@@ -122,7 +124,7 @@ const Favorite = () => {
                         Favorites ({cart.length})
                     </h2>
                     {cart.map((item) => (
-                        <div key={item.id} className="flex flex-col lg:flex-row bg-gray-100 mb-5 rounded-lg p-5 shadow-sm">
+                        <div key={item.id} className="flex flex-col lg:flex-row bg-gray-100 mb-5 rounded-lg p-5 shadow-sm hover:shadow-md hover:bg-gray-200 transition duration-300">
                             <img src={item.book_url} alt={item.book_name} className="w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-md mx-auto lg:mx-0" />
                             <div className="ml-4 flex-1 text-center lg:text-left">
                                 <h3 className="text-lg font-bold text-gray-800">{item.book_name}</h3>

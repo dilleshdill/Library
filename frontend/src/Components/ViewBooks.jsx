@@ -153,7 +153,9 @@ const ViewBooks = ({selectedFilters}) => {
 
                             <div className="mt-4 px-5 pb-5">
                                 <h5 className="text-xl font-bold tracking-tight text-slate-900">
-                                    {book.book_name}
+                                {book.book_name.length > 15 
+                                ? `${book.book_name.slice(0, 15)}...` 
+                                : book.book_name}
                                 </h5>
                                 <p className="text-sm text-gray-600 pt-1">Author: {book.author}</p>
 
