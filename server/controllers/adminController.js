@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import admin from "../models/adminModel.js";
-
+import adminModel from "../models/adminModel.js";
+import Library from "../models/libraryModel.js";
 // Generate JWT Token
 const generateUserToken = (user) => {
   return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
@@ -13,25 +13,36 @@ const generateUserToken = (user) => {
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required." });
+
+    // Find admin by email
+    const admin = await adminModel.findOne({ email });
+
+    if (!admin) return res.status(404).json({ message: "Admin not found" });
+
+    // Compare password
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+
+    // Find the library that this admin manages
+    const library = await Library.findOne({ admin: admin._id });
+
+    if (!library) {
+      return res.status(403).json({ message: "No library assigned to this admin" });
     }
 
-    const existingUser = await admin.findOne({ email });
-    if (!existingUser) {
-      return res.status(400).json({ message: "User not found." });
-    }
+    // Generate JWT token (attach library ID)
+    const token = jwt.sign({ adminId: admin._id, libraryId: library._id }, "your_secret_key", {
+      expiresIn: "1h",
+    });
 
-    const match = await bcrypt.compare(password, existingUser.password);
-    if (!match) {
-      return res.status(401).json({ message: "Incorrect password." });
-    }
-
-    const token = generateUserToken(existingUser);
-    res.json({ message: "Login successful", token });
+    res.json({
+      message: "Login successful",
+      admin: { _id: admin._id, name: admin.name, email: admin.email },
+      library: { _id: library._id, name: library.name, address: library.address },
+      token, // Return token with library ID
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Login error", error });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -48,13 +59,13 @@ const addAdmin = async (req, res) => {
       return res.status(400).json({ message: "Invalid email format." });
     }
 
-    const existingUser = await admin.findOne({ email });
+    const existingUser = await adminModel.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await admin.create({ username, email, password: hashedPassword });
+    const newUser = await adminModel.create({ username, email, password: hashedPassword });
 
     const token = generateUserToken(newUser);
     res.status(201).json({ message: "User registered successfully", token, user: newUser });

@@ -14,6 +14,7 @@ const SearchBar = ({doRefresh}) => {
 
                 if (searchItem.status === 200) {
                     setSearchTerm(searchItem.data.value);
+                    console.log(searchItem.data.value)
                 } else {
                     setSearchTerm("");
                 }
@@ -44,22 +45,20 @@ const SearchBar = ({doRefresh}) => {
     }
 
     return (
-        <label className="mx-auto mt-10  relative bg-white min-w-sm max-w-2xl flex flex-col md:flex-row items-center justify-center  py-2 px-2 rounded-2xl gap-2 shadow-lg focus-within:border-gray-300">
+        <label className="mx-auto  w-full md:w-[80%] flex flex-col md:flex-row items-center bg-white py-2 px-4 rounded-2xl gap-3  focus-within:border-gray-300">
             <input
                 id="search-bar"
                 type="text"
                 placeholder="Your keyword here"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="px-6 py-2 w-full rounded-md flex-1 outline-none bg-white"
+                className="px-6 py-3 w-full rounded-md flex-1 outline-none bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500"
             />
             <button
                 onClick={handleSearch}
-                className="w-full md:w-auto px-6 py-3 !bg-black border-black text-white fill-white active:scale-95 duration-100 border overflow-hidden relative rounded-xl transition-all disabled:opacity-70"
+                className="w-full md:w-auto px-6 py-3 !bg-gray-800 text-white border-black rounded-xl transition-all duration-200 active:scale-95 disabled:opacity-70"
             >
-                <div className="relative flex items-center justify-center">
-                    <span className="text-sm font-semibold whitespace-nowrap">Search</span>
-                </div>
+                <span className="text-sm font-semibold whitespace-nowrap">Search</span>
             </button>
         </label>
     );

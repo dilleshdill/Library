@@ -49,7 +49,7 @@ const BodyPage=()=>{
               <h1 className="mb-2 text-3xl font-bold text-black"><span className="text-green-500">Welcome ,</span> To This Library Page</h1>
               <p className="mb-6 text-black">This library Website provides users with easy and convenient access to a vast collection of books and journals from anywhere, at any time. </p>
               <div className="flex justify-center space-x-5">
-                <button className="flex w-full items-center justify-center gap-1 rounded-2xl !bg-gray-500 p-5 py-3 font-semibold text-white hover:!bg-gray-700">
+                <button className="flex w-full items-center justify-center gap-1 rounded-2xl !bg-gray-500 p-5 py-3 font-semibold text-white hover:!bg-gray-700" onClick={()=>{navigate('/books')}}>
                     Visit Now
                  
                 </button>

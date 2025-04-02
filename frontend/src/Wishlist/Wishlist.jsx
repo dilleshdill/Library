@@ -19,6 +19,10 @@ const Wishlist = () => {
                     const response = await axios.get(`http://localhost:5002/books/wishlist?email=${email}`);
                     setBooks(response.data);
                 }
+                else{
+                    // Navigate("/login")
+                    return
+                }
             } catch (error) {
                 console.log("Server error:", error);
             }

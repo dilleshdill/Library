@@ -19,6 +19,7 @@ const Orders = () => {
                 if (email) {
                     const response = await axios.get(`http://localhost:5002/orders?email=${email}`);
                     setCart(response.data);
+                    console.log(response.data)
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -27,18 +28,25 @@ const Orders = () => {
         fetchData();
     }, []);
     
-    const removeItem = async (book_name) => {
+    const removeItem = async (bookId) => {
         const email = localStorage.getItem("email");
         try {
-            const response = await axios.post("http://localhost:5002/orders/remove", { book_name, email });
+            // Remove from user's orders
+            const response = await axios.post("http://localhost:5002/orders/remove", { bookId, email });
+            
             if (response.status === 200) {
                 setCart(response.data.orders); // Update cart with new data
-                showToast("Removed from cart", "info");
+    
+                // Remove from admin orders
+                await axios.post("http://localhost:5002/orders/admin-orders/remove", { bookId, email });
+    
+                showToast("Order removed successfully", "info");
             }
         } catch (error) {
             console.error("Error removing item:", error);
         }
     };
+    
     
 
     const showToast = (message, type = "success") => {
@@ -81,7 +89,8 @@ const Orders = () => {
                                                 <div className="flex justify-center">
                                                     <button
                                                         onClick={() => {
-                                                            removeItem(item.book_name);
+                                                            removeItem(item.bookId);
+                                                            console.log(item.bookId)
                                                             close();
                                                         }}
                                                         className="text-white !bg-blue-500 hover:bg-red-800 font-medium rounded-lg text-base px-3 py-2.5 mr-2"

@@ -24,6 +24,8 @@ import addressRoute from "./routes/addressRoute.js";
 import chatRouter from "./routes/ChatRoutes.js";
 import messageRouter from "./routes/MessageRoute.js";
 import OrdersRoute from "./routes/ordersRoute.js";
+import LibraryRoute from "./routes/libraryRoute.js";
+import slotBookingRoute from "./routes/slotBookingRoute.js";
 
 // Config
 dotenv.config();
@@ -62,7 +64,8 @@ app.use("/address", addressRoute);
 app.use("/chat", chatRouter);
 app.use("/message", messageRouter);
 app.use("/orders", OrdersRoute);
-
+app.use("/library",LibraryRoute)
+app.use("/slotbooking",slotBookingRoute);
 // Clear Favorites
 // app.post("/favorite/clear", async (req, res) => {
 //   const { email } = req.body;

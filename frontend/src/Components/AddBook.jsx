@@ -3,26 +3,28 @@ import React, { useState } from 'react'
 
 const AddBook = () => {
     const [bookName,setBookName] = useState('')
-    const [discription,setDiscription] = useState('')
+    const [description,setDescription] = useState('')
     const [bookUrl,setBookUrl] = useState('')
     const [rating,setRating] = useState('')
     const [price,setPrice] = useState('')
     const [author,setAuthor] = useState('')
     const [date,setDate] = useState('')
-    const [catogory,setCatogory] = useState('')
+    const [category,setCategory] = useState('Fiction')
 
       const toAddBook = async (event) => {
         event.preventDefault();
+        const libraryId = localStorage.getItem("libraryId")
         try {
           const response = await axios.post("http://localhost:5002/admin/add-book", {
             book_name: bookName,
-            discription,
+            description,
             book_url: bookUrl,
-            catogory,
+            category,
             rating,
             price,
             author,
-            date
+            date,
+            libraryId
           },
           { withCredentials: true });
       
@@ -50,30 +52,30 @@ const AddBook = () => {
                 </label>
                 <select
                     id="category"
-                    onChange={(e) => setCatogory(e.target.value)}
-                    value={catogory}
+                    onChange={(e) => setCategory(e.target.value)}
+                    value={category} // Control the selection state
                     className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                    >
-                    <option selected id="fiction" value="Fiction">Fiction</option>
-                    <option id="non-fiction" value="Non-Fiction">Non-Fiction</option>
-                    <option id="mystery" value="Mystery">Mystery</option>
-                    <option id="fantasy" value="Fantasy">Fantasy</option>
-                    <option id="science_fiction" value="Science Fiction">Science Fiction</option>
-                    <option id="romance" value="Romance">Romance</option>
-                    <option id="thriller" value="Thriller">Thriller</option>
-                    <option id="horror" value="Horror">Horror</option>
-                    <option id="historical" value="Historical Fiction">Historical Fiction</option>
-                    <option id="biography" value="Biography">Biography</option>
-                    <option id="self_help" value="Self-Help">Self-Help</option>
-                    <option id="young_adult" value="Young Adult">Young Adult</option>
-                    <option id="children" value="Children's Literature">Children's Literature</option>
-                    <option id="dystopian" value="Dystopian">Dystopian</option>
-                    <option id="adventure" value="Adventure">Adventure</option>
-                    <option id="crime" value="Crime">Crime</option>
-                    <option id="poetry" value="Poetry">Poetry</option>
-                    <option id="graphic_novel" value="Graphic Novel">Graphic Novel</option>
-                    <option id="philosophy" value="Philosophy">Philosophy</option>
-                    <option id="spirituality" value="Spirituality">Spirituality</option>
+                >
+                    <option value="Fiction">Fiction</option>
+                    <option value="Non-Fiction">Non-Fiction</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Science Fiction">Science Fiction</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Thriller">Thriller</option>
+                    <option value="Horror">Horror</option>
+                    <option value="Historical Fiction">Historical Fiction</option>
+                    <option value="Biography">Biography</option>
+                    <option value="Self-Help">Self-Help</option>
+                    <option value="Young Adult">Young Adult</option>
+                    <option value="Children's Literature">Children's Literature</option>
+                    <option value="Dystopian">Dystopian</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Crime">Crime</option>
+                    <option value="Poetry">Poetry</option>
+                    <option value="Graphic Novel">Graphic Novel</option>
+                    <option value="Philosophy">Philosophy</option>
+                    <option value="Spirituality">Spirituality</option>
                 </select>
 
             </div>
@@ -86,9 +88,9 @@ const AddBook = () => {
             </div>
             <div className="mb-5">
                 <label for="email" className="mb-3 block text-base font-medium text-[#07074D]">
-                    Discription
+                    Description
                 </label>
-                <input type="text" name="email" id="email" placeholder="Enter your email" onChange={(e)=>setDiscription(e.target.value)}
+                <input type="text" name="email" id="email" placeholder="Enter your email" onChange={(e)=>setDescription(e.target.value)}
                     className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
             </div>
             <div className="-mx-3 flex flex-wrap">

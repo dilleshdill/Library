@@ -19,6 +19,7 @@ const Favorite = () => {
                 if (email) {
                     const response = await axios.get(`http://localhost:5002/favorite?email=${email}`);
                     setCart(response.data);
+                    console.log(response.data)
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -39,12 +40,12 @@ const Favorite = () => {
             });
     };
 
-    const removeItem = async (book_name) => {
+    const removeItem = async (bookId) => {
         const email = localStorage.getItem("email");
         try {
-            const response = await axios.post("http://localhost:5002/favorite/remove", { book_name, email });
+            const response = await axios.post("http://localhost:5002/favorite/remove", { bookId, email });
             if (response.status === 200) {
-                setCart(cart.filter((item) => item.book_name !== book_name));
+                setCart(cart.filter((item) => item.bookId !== bookId));
                 showToast("Remove From Cart","info")
             }
         } catch (error) {
@@ -142,7 +143,7 @@ const Favorite = () => {
                                                 <div className="flex justify-center">
                                                     <button
                                                         onClick={() => {
-                                                            removeItem(item.book_name);
+                                                            removeItem(item.bookId);
                                                             close();
                                                         }}
                                                         className="text-white !bg-blue-500 hover:bg-red-800 font-medium rounded-lg text-base px-3 py-2.5 mr-2"

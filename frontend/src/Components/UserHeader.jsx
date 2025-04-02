@@ -82,6 +82,7 @@ const UserHeader = () => {
           <div
             onClick={() => {
               Cookies.remove("jwt_token");
+              localStorage.removeItem("email");
               window.location.reload();
             }}
             className="inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md !text-white bg-gray-800 hover:bg-black focus:outline-none transition duration-150 ease-in-out ml-2"

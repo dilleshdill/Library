@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import UserHeader from "./UserHeader"
 
 const data = [
   { id: 1, image: "https://d2g9wbak88g7ch.cloudfront.net/productimages/mainimages/372/9781572245372.jpg" },
@@ -88,7 +88,7 @@ const ProductDetails = () => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:5002/favorite/${action}`, {
+      const response = await axios.post("http://localhost:5002/favorite/increment", {
         book_name,
         email,
         count: action === "increment" ? counter + 1 : counter - 1,
@@ -109,12 +109,13 @@ const ProductDetails = () => {
         alert("Please log in to add favorites.");
         return;
       }
-
+      const libraryId = localStorage.getItem("selectedLibrary")
       const response = await axios.post("http://localhost:5002/favorite", {
         email,
         book_name: book.book_name,
         book_url: book.book_url,
         price: book.price,
+        libraryId,
       });
 
       if (response.status === 200) {
@@ -134,7 +135,14 @@ const ProductDetails = () => {
   if (error) return <div className="text-red-500 text-center p-4">{error}</div>;
   if (!book) return <div className="text-center p-6">Loading...</div>;
 
+  const navigateTOBooking = (id) =>{
+    console.log(id)
+    navigate('/bookings',{state:id})
+  }
+
   return (
+    <>
+    <UserHeader/>
     <div className="bg-gray-100 min-h-screen w-screen p-6 flex justify-center">
       <ToastContainer />
       
@@ -190,6 +198,7 @@ const ProductDetails = () => {
               <span className="text-2xl font-bold mr-2">${book.price}</span>
             </div>
 
+            <div>
             {buy ? (
               <button onClick={() => toggleFavorite(book)} className="!bg-gray-800 text-white md:w-[30%] md:mt-5 px-6 py-2 rounded">
                 Add To Cart
@@ -215,15 +224,18 @@ const ProductDetails = () => {
                 </div>
               </div>
             )}
+            <button onClick={()=>navigateTOBooking(book._id)} className="!bg-gray-600 text-white md:w-[30%] md:mt-5 px-6 py-2 rounded ml-2">Reserved</button>
+            </div>
           </div>
         </div>
 
         <div className="pt-8">
           <p className="text-xl pb-3 font-bold">Description:</p>
-          <p className="pl-5">{book.discription}</p>
+          <p className="pl-5">{book.description}</p>
         </div>
       </div>
     </div>
+    </>
   );
 };
 

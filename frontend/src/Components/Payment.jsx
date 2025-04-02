@@ -34,24 +34,58 @@ const PaymentButton = () => {
   // Add Items to Orders Function
   const addToOrders = async () => {
     try {
-      const email = localStorage.getItem("email");
-      if (!email) throw new Error("Email not found in local storage");
+        const email = localStorage.getItem("email");
+        if (!email) throw new Error("Email not found in local storage");
 
-      const { data: favorites } = await axios.get(
-        `http://localhost:5002/favorite?email=${email}`
-      );
+        // Fetch user's favorite books
+        const { data: orders } = await axios.get(
+            `http://localhost:5002/favorite?email=${email}`
+        );
 
-      if (favorites.length === 0) throw new Error("No favorite items found");
+        console.log("Fetched orders:", orders); // Debugging log
 
-      await axios.post("http://localhost:5002/orders/add", {
-        email,
-        orders: favorites,
-      });
-      console.log("Orders added successfully");
+        if (!Array.isArray(orders) || orders.length === 0) {
+            throw new Error("No favorite items found");
+        }
+
+        // Step 1: Add to User's Orders
+        await axios.post("http://localhost:5002/orders/add", {
+            email,
+            orders,
+        });
+
+        // Step 2: Group Orders by `libraryId` for Admin Orders
+        const groupedOrders = {};
+        orders.forEach((book) => {
+            if (!groupedOrders[book.libraryId]) {
+                groupedOrders[book.libraryId] = [];
+            }
+            groupedOrders[book.libraryId].push({
+                email,
+                book_url: book.book_url,
+                book_name: book.book_name,
+                price: book.price,
+                count: book.count,
+                status: "Pending",
+                bookId:book.bookId,
+                orderedAt: new Date(),
+            });
+        });
+
+        // Step 3: Add Orders to Admin's Database
+        for (const libraryId in groupedOrders) {
+            await axios.post("http://localhost:5002/orders/admin-orders/add", {
+                libraryId,
+                orders: groupedOrders[libraryId],
+            });
+        }
+
+        console.log("Orders added successfully for user and admin");
     } catch (error) {
-      console.error("Error adding to orders:", error.message);
+        console.error("Error adding to orders:", error.message);
     }
-  };
+};
+
 
   // Payment Handler
   const handlePayment = async () => {

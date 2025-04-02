@@ -1,36 +1,38 @@
 import FavoriteModel from "../models/favoriteModel.js";
 
 const addFavorite = async (req, res) => {
-    const { book_name, book_url, price, email } = req.body;
-
+    const { book_name, book_url, price, email, libraryId, bookId } = req.body;
     try {
         const user = await FavoriteModel.findOne({ email });
         
         if (!user) {
-            // Create a new user with the book added to favorites
-            const newFavorite = await FavoriteModel.create({
+            // Create a new user document with the book added to favorites
+            await FavoriteModel.create({
                 email,
                 favorites: [
                     {
                         book_name,
                         book_url,
                         price,
-                        count: 1
+                        count: 1,
+                        libraryId,
+                        bookId,
                     }
                 ]
             });
             return res.status(200).json({ message: "Book added to favorites" });
         }
 
-        const exist = user.favorites.find(eachItem => eachItem.book_name === book_name);
+        // Use toString() to compare IDs
+        const exist = user.favorites.find(eachItem => eachItem.bookId.toString() === bookId.toString());
         if (exist) {
-            // Book already exists, remove it from the favorites
-            user.favorites = user.favorites.filter(eachItem => eachItem.book_name !== book_name);
+            // Book already exists, remove it from favorites
+            user.favorites = user.favorites.filter(eachItem => eachItem.bookId.toString() !== bookId.toString());
             await user.save();
             return res.status(201).json({ message: "Book removed from favorites" });
         } else {
-            // Book does not exist, add it to the favorites
-            user.favorites.push({ book_name, book_url, price, count: 1 });
+            // Book does not exist, add it to favorites
+            user.favorites.push({ book_name, book_url, price, count: 1, libraryId, bookId });
             await user.save();
             return res.status(200).json({ message: "Book added to favorites" });
         }
@@ -39,6 +41,7 @@ const addFavorite = async (req, res) => {
         return res.status(500).json({ message: "Server error" });
     }
 };
+
 
 const setLike = async (req, res) => {
     const { email } = req.query;
@@ -57,7 +60,7 @@ const setLike = async (req, res) => {
 };
 
 const removeFavorite = async (req, res) => {
-    const { email, book_name } = req.body;
+    const { email, bookId } = req.body;
 
     try {
         const user = await FavoriteModel.findOne({ email });
@@ -65,7 +68,10 @@ const removeFavorite = async (req, res) => {
             return res.status(500).json({ message: "User not found" });
         }
 
-        user.favorites = user.favorites.filter(eachItem => eachItem.book_name !== book_name);
+        // Convert both sides to string before comparing
+        user.favorites = user.favorites.filter(
+            eachItem => eachItem.bookId.toString() !== bookId.toString()
+        );
         await user.save();
         return res.status(200).json({ message: "Book removed successfully" });
     } catch (error) {
@@ -73,9 +79,12 @@ const removeFavorite = async (req, res) => {
     }
 };
 
+
 const setIncrement = async (req, res) => {
     const { email, book_name, count } = req.body;
-
+    if (count<1){
+        return 
+    }
     try {
         const user = await FavoriteModel.findOne({ email });
 

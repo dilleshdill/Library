@@ -7,7 +7,9 @@ const ordersSchema = new mongoose.Schema({
             book_url:{ type:String,required:true },
             book_name:{ type:String,required:true },
             price:{ type:String,required:true },
-            count:{type:Number}
+            count:{type:Number},
+            libraryId: { type: mongoose.Schema.Types.ObjectId, ref: "Library", required: true },
+            bookId:{ type: mongoose.Schema.Types.ObjectId, ref: "book", required: true },
         }
     ]
 })

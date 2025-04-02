@@ -38,7 +38,7 @@ const Books = () => {
   };
 
   useEffect(() => {
-    console.log("Updated filters:", selectedFilters);
+    
   }, [selectedFilters]);
   return (
     <div className="mt-0 pt-0 md:min-h-[100vh]">
@@ -65,7 +65,7 @@ const Books = () => {
       </div>
 
       <ViewBooks selectedFilters={selectedFilters} />
-      <Author />
+      {/* <Author /> */}
     </div>
   );
 };

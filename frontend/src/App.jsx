@@ -27,7 +27,9 @@ import AdminSelectedChatApp from './Components/Chat/AdminSelectedChat';
 import PaymentSuccess from './Components/PaymentSuccess';
 import Orders from './Components/Orders';
 import OrderArrived from './Components/OrderArrived';
-
+import SearchLibrarys from './Components/SearchLibrarys';
+import Reserved from './Components/Reserved';
+import SlotBooking from './Components/slotBooking';
 
 const App = () =>{
   return(
@@ -36,7 +38,7 @@ const App = () =>{
         <Route path='/login' element={<Login />} />
         <Route path="/" element={<Homepage />} />
         <Route path='/register' element= {<Register />} />
-        <Route element = {<ProtuctedRoute/>}>
+        {/* <Route element = {<ProtuctedRoute/>}> */}
           <Route path ='/header' element = {<Header />} />
           <Route path ='/sidebar' element = {<Sidebar />} />
           <Route path ='/dashboard' element ={<Dashboard />} />
@@ -58,7 +60,10 @@ const App = () =>{
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/orders-arrived" element={<OrderArrived />} />
-        </Route>
+          <Route path="search-library" element={<SearchLibrarys/>}/>
+          <Route path="reserved" element={<Reserved/>}/>
+          <Route path = "bookings"element = {<SlotBooking/>}/>
+        {/* </Route> */}
        </Routes>
     </BrowserRouter>
   )

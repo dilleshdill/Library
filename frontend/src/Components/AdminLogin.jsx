@@ -16,6 +16,8 @@ const AdminLogin = () => {
           withCredentials: true,  // ✅ Include credentials (cookies)
         });
       alert("Login successful");
+      localStorage.setItem("libraryId",response.data.library._id)
+      console.log(response.data)
       localStorage.setItem("token", response.data.token);
       navigate("/dashboard");
     } catch (error) {
