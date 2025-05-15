@@ -21,22 +21,28 @@ const addLibrary = async (req, res) => {
 
 const getLibraryDetails = async (req, res) => {
     try {
-        const { libraryId } = req.query;  // Fix parameter name (lowercase)
+        // Use req.params instead of req.query since you're using /:id in route
+        const { id } = req.params;
 
-        if (!libraryId) {
+        if (!id) {
             return res.status(400).json({ message: "Library ID is required" });
         }
 
-        const library = await Library.findById(libraryId);
+        const library = await Library.findById(id)
+            .populate('admin', 'username email') // Example of populating admin details
+            .lean();
 
         if (!library) {
-            return res.status(404).json({ message: "No library found" });
+            return res.status(404).json({ message: "Library not found" });
         }
 
-        res.status(200).json({ message: "Library found", library });
+        res.status(200).json(library); // Return just the library object directly
     } catch (error) {
         console.error("Error fetching library details:", error);
-        res.status(500).json({ message: "Server error fetching library details", error: error.message });
+        res.status(500).json({ 
+            message: "Server error fetching library details", 
+            error: error.message 
+        });
     }
 };
 

@@ -95,7 +95,7 @@ const getUserId = async (req, res) => {
 const RegisterSlot = async (req, res) => {
     try {
         const { data, email } = req.body;
-        console.log(data);
+        console.log(data)
 
         const { bookingDetails, bookId, selectedDate, startTime, endTime, libraryId } = data;
 
@@ -108,6 +108,7 @@ const RegisterSlot = async (req, res) => {
 
         // Find the library in reservedBooks
         const libraryIndex = user.reservedBooks.findIndex(eachItem => eachItem.libraryId.toString() === libraryId);
+        console.log(libraryIndex)
 
         if (libraryIndex === -1) {
             // Library doesn't exist, add a new entry
@@ -118,7 +119,8 @@ const RegisterSlot = async (req, res) => {
                     position: bookingDetails,
                     date: selectedDate,
                     startTime,
-                    endTime
+                    endTime,
+                    
                 }]
             };
 
@@ -132,14 +134,23 @@ const RegisterSlot = async (req, res) => {
                 ( eachItem.endTime === endTime )
                 
             );
-
+            console.log(existingBookingIndex)
             if (existingBookingIndex !== -1) {
                 // Update the previous booking with the new seat (position) and bookId
-                
+                if (user.reservedBooks[libraryIndex].reservedAt[existingBookingIndex].status === "Rejected") {
+                    console.log("Rebooking a previously rejected seat...");
+
+                    user.reservedBooks[libraryIndex].reservedAt[existingBookingIndex].bookId = bookId;
+                    user.reservedBooks[libraryIndex].reservedAt[existingBookingIndex].status = "Approved"; // ✅ Change status
+                }
+                else{
                     if (user.reservedBooks[libraryIndex].reservedAt[existingBookingIndex])
-                    user.reservedBooks[libraryIndex].reservedAt[existingBookingIndex].bookId = bookId,
-                    user.reservedBooks[libraryIndex].reservedAt[existingBookingIndex].position = bookingDetails;
-                
+                        user.reservedBooks[libraryIndex].reservedAt[existingBookingIndex].bookId = bookId,
+                        user.reservedBooks[libraryIndex].reservedAt[existingBookingIndex].position = bookingDetails;
+                }
+                    
+                    await user.save();
+                    console.log(user.reservedBooks[libraryIndex].reservedAt[existingBookingIndex])
                 
             } else {
 
@@ -211,11 +222,54 @@ const RegisterSlot = async (req, res) => {
 //     }
 //   };
   
+const getUserDetailsByEmail = async (req, res) => {
+    try {
+        const { email } = req.params;  // Accessing email from params
+        
+        if (!email) {
+            return res.status(400).json({ message: "Email is required" });
+        }
+
+        const user = await userRegisterModel.findOne({ email });
+        console.log(user)
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ message: "User details found", user });
+    } catch (error) {
+        console.error("Error finding the details:", error);
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
+const getUserDetailsById = async (req, res) => {
+    try {
+        const { id } = req.params;  // Accessing email from params
+        console.log(id)
+        
+        if (!id) {
+            return res.status(400).json({ message: "id is required" });
+        }
+
+        const user = await userRegisterModel.findOne({ _id: id });
+
+        console.log(user)
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ message: "User details found", user });
+    } catch (error) {
+        console.error("Error finding the details:", error);
+        res.status(500).json({ message: "Server error", error });
+    }
+}
 
 
 
 
 
-
-
-export { addUser, userLogin, getUserDetails, getUserId,RegisterSlot};
+export { addUser, userLogin, getUserDetails, getUserId,RegisterSlot,getUserDetailsByEmail,getUserDetailsById};

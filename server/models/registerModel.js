@@ -21,6 +21,7 @@ const userRegisterSchema = new mongoose.Schema({
               date:{type: String,required:true},
               startTime:{type:String,required:true},
               endTime:{type:String,required:true},
+              status: { type: String, enum: ["Pending", "Approved", "Rejected"], default: "Approved" },
             }]
         },
       ],

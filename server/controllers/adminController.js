@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import adminModel from "../models/adminModel.js";
 import Library from "../models/libraryModel.js";
+import userRegisterModel from "../models/registerModel.js";
 // Generate JWT Token
 const generateUserToken = (user) => {
   return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
@@ -74,4 +75,91 @@ const addAdmin = async (req, res) => {
   }
 };
 
-export { addAdmin, adminLogin };
+const getReseravationFromUser = async (req, res) => {
+  try {
+      const { libraryId } = req.query; // Correct query parameter extraction
+
+      if (!libraryId) {
+          return res.status(400).json({ message: "Library ID is required" });
+      }
+
+      const reservations = await userRegisterModel.find(
+          { "reservedBooks.libraryId": libraryId },
+          { username: 1, email: 1, reservedBooks: 1 }
+      );
+
+
+      res.status(200).json(reservations);
+  } catch (error) {
+      res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+const deleteReservation = async (req, res) => {
+  try {
+      const { userId, reservationId } = req.body;
+
+
+      if (!userId || !reservationId) {
+          return res.status(400).json({ message: "User ID and Reservation ID are required" });
+      }
+
+      // Find the user and remove the specific reservation
+      const user = await userRegisterModel.findById({_id:userId});
+
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+      // Filter out the reservation that matches reservationId
+      let seatUpdated = false;
+
+      // Update the status of the specific reservation to "Rejected"
+      user.reservedBooks.forEach(book => {
+          book.reservedAt.forEach(reservation => {
+              if (reservation._id.toString() === reservationId) {
+                  reservation.status = "Rejected"; // ✅ Update the status
+                  seatUpdated = true;
+              }
+          });
+      });
+      console.log(user.reservedBooks)
+
+      if (!seatUpdated) {
+          return res.status(404).json({ message: "Reservation not found" });
+      }
+      
+
+      await user.save();
+      res.status(200).json({ message: "Reservation removed successfully", user });
+  } catch (error) {
+      console.error("Error deleting reservation:", error);
+      res.status(500).json({ message: "Server error", error });
+  }
+};
+
+const getAdminDetails = async (req, res) => {
+  try{
+    const { adminId } = req.params;
+    
+
+    if (!adminId) {
+      return res.status(400).json({ message: "Admin ID is required" });
+    }
+
+    const admin = await adminModel.findById(adminId);
+    console.log(admin)
+
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    res.status(200).json({ message: "Admin details found", admin });
+  }
+  catch (error) {
+    console.error("Error finding the details:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+}
+
+export { addAdmin, adminLogin,getReseravationFromUser,deleteReservation,getAdminDetails };

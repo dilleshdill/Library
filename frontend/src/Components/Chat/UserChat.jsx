@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import UserHeader from "../UserHeader";
 import { io } from "socket.io-client";
 import axios from "axios";
+import LibrarysList from "./LibrarysList";
 
 const socket = io("http://localhost:5002", {
   autoConnect: false,
@@ -120,67 +121,23 @@ export default function ChatApp() {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col items-center">
-      <UserHeader className="w-screen" />
-
-      {/* Chat Container */}
-      <div className="bg-gray-200 flex-1 overflow-y-scroll p-4 w-screen">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex mb-4 ${
-              msg.sender === "me" ? "justify-end" : "justify-start"
-            }`}
-          >
-            {msg.sender !== "me" && (
-              <img
-                className="w-8 h-8 rounded-full mr-3 self-end"
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                alt="User Avatar"
-              />
-            )}
-
-            <div
-              className={`rounded-lg p-3 shadow max-w-xs ${
-                msg.sender === "me"
-                  ? "bg-blue-500 text-white rounded-br-none"
-                  : "bg-white text-gray-800 rounded-bl-none"
-              }`}
-            >
-              {msg.text}
+    // <div className="h-screen w-screen flex flex-col items-center">
+    //   <UserHeader className="w-screen" />
+      
+    //   <div className="flex h-screen w-screen">
+    //     <LibrarysList/>
+  
+    //   </div>
+      
+    // </div>
+    <div className="h-screen w-screen flex flex-col">
+      <UserHeader />
+        <div className="flex flex-row w-screen  h-[calc(100vh-64px)] bg-gradient-to-b from-blue-50 to-blue-100">
+          <LibrarysList/>
+            <div className="md:flex items-center justify-center w-full hidden">
+              <h1>select any user</h1>
             </div>
-
-            {msg.sender === "me" && (
-              <img
-                className="w-8 h-8 rounded-full ml-3 self-end"
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                alt="User Avatar"
-              />
-            )}
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input Box */}
-      <div className="bg-gray-100 px-4 py-2 w-screen">
-        <div className="flex items-center w-full">
-          <input
-            className="w-full border rounded-full py-2 px-4 mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="text"
-            placeholder="Type your message..."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          />
-          <div
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-full transition duration-300"
-            onClick={sendMessage}
-          >
-            Send
-          </div>
         </div>
-      </div>
-    </div>
+  </div>
   );
 }

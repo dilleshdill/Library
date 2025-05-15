@@ -232,16 +232,17 @@ const ViewBooks = ({selectedFilters}) => {
                                             </div>
 
                                             <div className="flex items-center">
-                                                {[...Array(5)].map((_, index) =>
+                                                {/* {[...Array(5)].map((_, index) =>
                                                     index < book.rating ? (
                                                         <FaStar key={index} className="text-yellow-500 h-5 w-5" />
                                                     ) : (
                                                         <FaRegStar key={index} className="text-yellow-500 h-5 w-5" />
                                                     )
-                                                )}
-                                                <span className="ml-2 rounded bg-yellow-500 px-2.5 py-0.5 text-xs font-semibold">
-                                                    {book.rating}.0
-                                                </span>
+                                                )} */}
+                                                <div className="ml-2 rounded flex items-center  px-2.5 py-0.5 text-xs font-semibold">
+                                                <FaStar className="text-yellow-500 h-5 w-5" />
+                                                    <p className="text-[15px] pl-1">{book.rating}.0</p>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -263,7 +264,7 @@ const ViewBooks = ({selectedFilters}) => {
                                             )}
 
                                             <button className="hover:!bg-gray-600 !border-gray-500 !text-gray-500 hover:!text-white !pt-1 !pb-1 !mt-2" onClick={()=>{`/books/${book._id}`}}>
-                                                Buy
+                                                Borrow
                                             </button>
                                         </div>
                                     </div>

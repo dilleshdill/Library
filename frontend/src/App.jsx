@@ -30,6 +30,8 @@ import OrderArrived from './Components/OrderArrived';
 import SearchLibrarys from './Components/SearchLibrarys';
 import Reserved from './Components/Reserved';
 import SlotBooking from './Components/slotBooking';
+import AdminReservations from './Components/AdminReservations';
+import UserSelectedChat from './Components/Chat/UserSelectedChat';
 
 const App = () =>{
   return(
@@ -57,12 +59,14 @@ const App = () =>{
           <Route path='/chat' element = {<ChatApp/>}/>
           <Route path='/adminchat' element = {<AdminChatApp/>}/>
           <Route path="/adminchat/:id" element={<AdminSelectedChatApp />} />
+          <Route path="/userChat/:id" element = {<UserSelectedChat/>}/>
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/orders-arrived" element={<OrderArrived />} />
           <Route path="search-library" element={<SearchLibrarys/>}/>
           <Route path="reserved" element={<Reserved/>}/>
           <Route path = "bookings"element = {<SlotBooking/>}/>
+          <Route path='reservationsFromUsers' element ={<AdminReservations/>}/>
         {/* </Route> */}
        </Routes>
     </BrowserRouter>

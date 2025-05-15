@@ -104,15 +104,18 @@ const ProductDetails = () => {
   };
 
   const toggleFavorite = async (book) => {
+    console.log(book)
     try {
       if (!email) {
         alert("Please log in to add favorites.");
         return;
       }
       const libraryId = localStorage.getItem("selectedLibrary")
+      console.log(libraryId)
       const response = await axios.post("http://localhost:5002/favorite", {
         email,
         book_name: book.book_name,
+        bookId:book._id,
         book_url: book.book_url,
         price: book.price,
         libraryId,
@@ -198,11 +201,11 @@ const ProductDetails = () => {
               <span className="text-2xl font-bold mr-2">${book.price}</span>
             </div>
 
-            <div>
+            <div className="flex flex-col gap-4 md:flex-row items-center  pt-5 space-x-4 border-b-2 border-gray-300 pb-5">
             {buy ? (
-              <button onClick={() => toggleFavorite(book)} className="!bg-gray-800 text-white md:w-[30%] md:mt-5 px-6 py-2 rounded">
+              <div onClick={() => toggleFavorite(book)} className="bg-gray-800 text-white md:w-[30%] flex justify-center items-center px-6 py-2 rounded cursor-pointer">
                 Add To Cart
-              </button>
+              </div>
             ) : (
               <div>
                 <div className="flex items-center space-x-3">
@@ -216,7 +219,7 @@ const ProductDetails = () => {
                 </div>
                 <div className="pt-5 space-x-8 flex">
                   <button onClick={() => navigate("/favorite")} className="!bg-gray-800 text-white px-6 py-2 rounded">
-                    Buy Now
+                    Borrow
                   </button>
                   <button onClick={() => toggleFavorite(book)} className="!bg-gray-500 text-white px-6 py-2 rounded">
                     Remove
@@ -224,7 +227,7 @@ const ProductDetails = () => {
                 </div>
               </div>
             )}
-            <button onClick={()=>navigateTOBooking(book._id)} className="!bg-gray-600 text-white md:w-[30%] md:mt-5 px-6 py-2 rounded ml-2">Reserved</button>
+            <div onClick={()=>navigateTOBooking(book._id)} className=" text-black border-1 md:w-[30%] flex justify-center items-center px-6 py-2 rounded cursor-pointer">Reserve</div>
             </div>
           </div>
         </div>

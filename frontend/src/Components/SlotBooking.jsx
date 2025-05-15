@@ -23,6 +23,7 @@ const SlotBooking = () => {
     const [showAvailable,setShowAvailable] = useState(false)
     const [checkAvailabe,setChekAvailable]=useState(false)
     const [positionArray,setPositionArray] = useState([])
+    const [isButtonShow,setButtonShow] = useState(false)
     // Generate next 30 days for date selection
     const getNextMonthDates = () => {
         const dates = [];
@@ -95,6 +96,7 @@ const SlotBooking = () => {
                                 date: newItem.date,
                                 startTime: newItem.startTime,
                                 endTime: newItem.endTime,
+                                status:newItem.status,
                             }))
                         )
                     );
@@ -146,7 +148,8 @@ const SlotBooking = () => {
             item.date === selectedDate &&
             item.position.floor === floor &&
             item.position.grid === grid &&
-            item.position.index === index 
+            item.position.index === index && 
+            item.status === "Approved"
         );
     };
 
@@ -182,7 +185,8 @@ const SlotBooking = () => {
                 bookId,
                 selectedDate,
                 startTime,
-                endTime
+                endTime,
+                status:"Approved",
             };
             const response = await axios.post('http://localhost:5002/api/auth/reserve-book', {
                 data, email
@@ -248,10 +252,12 @@ const SlotBooking = () => {
         return !isShow
     }
     
-
+    const toggleSlotButton = () => {
+        showAvailableTiming()
+    }
     
     return (
-        <div className="container mx-auto px-4 py-6 max-w-screen">
+        <div className="container mx-auto px-4 py-6 max-w-screen" >
             <h1 className="text-2xl font-bold text-gray-800 mb-6">Slot Booking</h1>
             
             {/* Date Selection */}
@@ -308,11 +314,19 @@ const SlotBooking = () => {
                     </div>
                     <div className="flex items-center">
                         <MdOutlineChair size={24} className="text-amber-500 mr-2" />
+                        <span className="text-sm">Partially Booked</span>
+                    </div>
+                    <div className="flex items-center">
+                        <MdOutlineChair size={24} className="text-red-500 mr-2" />
                         <span className="text-sm">Booked</span>
                     </div>
                     <div className="flex items-center">
                         <MdOutlineChair size={24} className="text-blue-500 mr-2" />
                         <span className="text-sm">Your Selection</span>
+                    </div>
+                    <div className="flex items-center">
+                        <MdOutlineChair size={24} className="text-blue-500 mr-2" />
+                        <span className="text-sm">Available slots</span>
                     </div>
                 </div>
                 <div>
@@ -333,7 +347,7 @@ const SlotBooking = () => {
                                 {floor.grids.map((grid, gridIndex) => (
                                     <div key={gridIndex} className="bg-gray-50 p-4 rounded-md">
                                         <h3 className="font-medium text-center mb-3">Grid {gridIndex + 1}</h3>
-                                        <div 
+                                        <div  
                                             className="grid gap-2 justify-center mx-auto"
                                             style={{ 
                                                 gridTemplateColumns: `repeat(${grid.cols}, minmax(30px, 1fr))`,
@@ -363,7 +377,7 @@ const SlotBooking = () => {
                                                             onClick={() => getSelected(floorIndex + 1, gridIndex + 1, chairIndex + 1)}
                                                         >
                                                             {
-                                                                showAvailable ? <MdOutlineChair size={20} className="hover:text-blue-500 text-blue-700" />:<MdOutlineChair size={20} className="hover:text-blue-500 text-green-700" />
+                                                                showAvailable ? <MdOutlineChair size={20} className="hover:text-blue-500 text-blue-500" />:<MdOutlineChair size={20} className="hover:text-blue-500 text-green-700" />
                                                             }
 
                                                         </div> : 
@@ -390,7 +404,7 @@ const SlotBooking = () => {
                                                                 >
                                                                     <MdOutlineChair 
                                                                         size={20} 
-                                                                        color={getColorVerifed(floorIndex + 1, gridIndex + 1, chairIndex + 1) ? "blue" : "red"} 
+                                                                        className={getColorVerifed(floorIndex + 1, gridIndex + 1, chairIndex + 1) ? "text-blue-500" : "text-red-500"} 
                                                                     />
                                                                 </div>
                                                             ) : (

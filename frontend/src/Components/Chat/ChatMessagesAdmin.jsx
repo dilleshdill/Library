@@ -9,7 +9,7 @@ const socket = io("http://localhost:5002", {
   transports: ["websocket"],
 });
 
-export default function ChatMessages() {
+export default function ChatMessagesAdmin() {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const { id } = useParams();
@@ -31,10 +31,9 @@ export default function ChatMessages() {
         console.log("Chat details:", res.data);
         const response = await axios.get(`http://localhost:5002/message/${id}`);
         // Get receiver ID from email
-        const receiver = localStorage.getItem("email");
-        const registerRes = await axios.get(`http://localhost:5002/api/auth/getid/${receiver}`);
-        const receiverId = registerRes.data.user._id;
-        setUserId(receiverId)
+        const receiver = localStorage.getItem("libraryId");
+        
+        setUserId(receiver)
         setMessages(response.data); // Store messages in state
         console.log("messages:",messages)
         scrollToBottom(); // Scroll to the latest message

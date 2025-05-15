@@ -41,8 +41,9 @@ const Books = () => {
     
   }, [selectedFilters]);
   return (
-    <div className="mt-0 pt-0 md:min-h-[100vh]">
-      <UserHeader />
+    <div className="mt-0 pt-0 md:min-h-[100vh] ">
+      <div className="sticky top-0"><UserHeader/></div>
+
 
       {/* Genre Filter Bar */}
       <div
