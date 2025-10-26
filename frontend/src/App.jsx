@@ -5,7 +5,7 @@ import Register from "./Components/Register";
 import Dashboard from "./Components/Dashboard";
 import Sidebar from "./Components/Sidebar";
 import Header from "./Components/Header";
-import AdminLogin from './Components/adminLogin';
+import AdminLogin from './Components/AdminLogin';
 import UserHeader from './Components/UserHeader';
 import AddBook from './Components/AddBook';
 import './App.css'
