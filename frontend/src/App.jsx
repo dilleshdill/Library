@@ -32,6 +32,8 @@ import Reserved from './Components/Reserved';
 import SlotBooking from './Components/slotBooking';
 import AdminReservations from './Components/AdminReservations';
 import UserSelectedChat from './Components/Chat/UserSelectedChat';
+import MaintainBooks from './Components/MaintainBooks';
+
 
 const App = () =>{
   return(
@@ -67,6 +69,7 @@ const App = () =>{
           <Route path="reserved" element={<Reserved/>}/>
           <Route path = "bookings"element = {<SlotBooking/>}/>
           <Route path='reservationsFromUsers' element ={<AdminReservations/>}/>
+          <Route path='/maintain-books' element={<MaintainBooks />} />
         {/* </Route> */}
        </Routes>
     </BrowserRouter>

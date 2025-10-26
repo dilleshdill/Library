@@ -24,7 +24,7 @@ const PaymentButton = () => {
       const email = localStorage.getItem("email");
       if (!email) throw new Error("Email not found in local storage");
 
-      await axios.post("http://localhost:5002/favorite/clear", { email });
+      await axios.post(`${import.meta.env.VITE_DOMAIN}/favorite/clear`, { email });
       console.log("Favorites cleared successfully");
     } catch (error) {
       console.error("Error clearing favorites:", error.message);
@@ -39,7 +39,7 @@ const PaymentButton = () => {
 
         // Fetch user's favorite books
         const { data: orders } = await axios.get(
-            `http://localhost:5002/favorite?email=${email}`
+            `${import.meta.env.VITE_DOMAIN}/favorite?email=${email}`
         );
 
         console.log("Fetched orders:", orders); // Debugging log
@@ -49,7 +49,7 @@ const PaymentButton = () => {
         }
 
         // Step 1: Add to User's Orders
-        await axios.post("http://localhost:5002/orders/add", {
+        await axios.post(`${import.meta.env.VITE_DOMAIN}/orders/add`, {
             email,
             orders,
         });
@@ -74,7 +74,7 @@ const PaymentButton = () => {
 
         // Step 3: Add Orders to Admin's Database
         for (const libraryId in groupedOrders) {
-            await axios.post("http://localhost:5002/orders/admin-orders/add", {
+            await axios.post(`${import.meta.env.VITE_DOMAIN}/orders/admin-orders/add`, {
                 libraryId,
                 orders: groupedOrders[libraryId],
             });
@@ -98,7 +98,7 @@ const PaymentButton = () => {
 
       // Create Razorpay Order
       const { data: order } = await axios.post(
-        "http://localhost:5002/api/payment/create-order",
+        `${import.meta.env.VITE_DOMAIN}/api/payment/create-order`,
         {
           amount: price, // Amount in INR
           currency: "INR",
@@ -118,7 +118,7 @@ const PaymentButton = () => {
           try {
             // Verify Payment
             const verification = await axios.post(
-              "http://localhost:5002/api/payment/verify-payment",
+              `${import.meta.env.VITE_DOMAIN}/api/payment/verify-payment`,
               response
             );
 

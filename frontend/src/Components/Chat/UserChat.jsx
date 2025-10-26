@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import axios from "axios";
 import LibrarysList from "./LibrarysList";
 
-const socket = io("http://localhost:5002", {
+const socket = io(`${import.meta.env.VITE_SOCKET_DOMAIN}`, {
   autoConnect: false,
   withCredentials: true,
   transports: ["websocket"],
@@ -31,7 +31,7 @@ export default function ChatApp() {
 
         // 1. Fetch user ID
         const { data: userData } = await axios.post(
-          "http://localhost:5002/api/auth/userid",
+          `${import.meta.env.VITE_DOMAIN}/api/auth/userid`,
           { email },
           { withCredentials: true }
         );
@@ -41,7 +41,7 @@ export default function ChatApp() {
 
         // 2. Fetch chat and messages
         const { data: chatData } = await axios.get(
-          `http://localhost:5002/chat/${id}`
+          `${import.meta.env.VITE_DOMAIN}/chat/${id}`
         );
 
         if (chatData.length > 0) {
@@ -50,7 +50,7 @@ export default function ChatApp() {
           socket.emit("join", chatId);
 
           const { data: messageData } = await axios.get(
-            `http://localhost:5002/message/${chatId}`
+            `${import.meta.env.VITE_DOMAIN}/message/${chatId}`
           );
 
           // Ensure consistent message structure

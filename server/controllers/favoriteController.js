@@ -52,7 +52,7 @@ const setLike = async (req, res) => {
             if (user) {
                 return res.status(200).json(user.favorites);
             }
-            return res.status(404).json({ message: "User not found" });
+            return res.status(400).json({ message: "User not found" });
         }
     } catch (error) {
         return res.status(500).json({ message: "Server error" });
@@ -98,7 +98,7 @@ const setIncrement = async (req, res) => {
             await user.save();
             return res.status(200).json({ favorites: user.favorites });
         }
-        return res.status(404).json({ message: "Book not found in favorites" });
+        return res.status(400).json({ message: "Book not found in favorites" });
     } catch (error) {
         return res.status(500).json({ message: "Error updating favorite" });
     }

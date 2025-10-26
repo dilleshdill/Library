@@ -17,6 +17,7 @@ const UserHeader = () => {
     { to: "/orders", label: "Orders" },
     { to: "/wishlist", label: "Wishlist" },
     { to: "/favorite", label: "Cart" },
+    {to:"/search-library", label:"Librarys"}
   ];
 
   return (

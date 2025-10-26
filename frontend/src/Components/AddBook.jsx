@@ -15,7 +15,7 @@ const AddBook = () => {
         event.preventDefault();
         const libraryId = localStorage.getItem("libraryId")
         try {
-          const response = await axios.post("http://localhost:5002/admin/add-book", {
+          const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/admin/add-book`, {
             book_name: bookName,
             description,
             book_url: bookUrl,

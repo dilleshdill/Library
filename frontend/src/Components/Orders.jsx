@@ -17,7 +17,7 @@ const Orders = () => {
             const email = localStorage.getItem("email");
             try {
                 if (email) {
-                    const response = await axios.get(`http://localhost:5002/orders?email=${email}`);
+                    const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/orders?email=${email}`);
                     setCart(response.data);
                     console.log(response.data)
                 }
@@ -32,13 +32,13 @@ const Orders = () => {
         const email = localStorage.getItem("email");
         try {
             // Remove from user's orders
-            const response = await axios.post("http://localhost:5002/orders/remove", { bookId, email });
+            const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/orders/remove`, { bookId, email });
             
             if (response.status === 200) {
                 setCart(response.data.orders); // Update cart with new data
     
                 // Remove from admin orders
-                await axios.post("http://localhost:5002/orders/admin-orders/remove", { bookId, email });
+                await axios.post(`${import.meta.env.VITE_DOMAIN}/orders/admin-orders/remove`, { bookId, email });
     
                 showToast("Order removed successfully", "info");
             }

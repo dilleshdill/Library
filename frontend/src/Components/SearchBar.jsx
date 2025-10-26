@@ -10,7 +10,7 @@ const SearchBar = ({doRefresh}) => {
                 const email = localStorage.getItem("email");
                 if (!email) return;
 
-                const searchItem = await axios.get(`http://localhost:5002/getSearch?email=${email}`);
+                const searchItem = await axios.get(`${import.meta.env.VITE_DOMAIN}/getSearch?email=${email}`);
 
                 if (searchItem.status === 200) {
                     setSearchTerm(searchItem.data.value);
@@ -31,7 +31,7 @@ const SearchBar = ({doRefresh}) => {
         try{
             const email = localStorage.getItem("email")
             if (!email) return;
-            const response=await axios.post('http://localhost:5002/getSearch',{
+            const response=await axios.post(`${import.meta.env.VITE_DOMAIN}/getSearch`,{
                 email,
                 searchTerm,
             })

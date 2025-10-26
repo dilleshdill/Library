@@ -59,7 +59,7 @@ const getChatById = async (req, res) => {
       const chat = await chatModel.findById(chatId);
       if (!chat) {
         console.warn("Chat not found for ID:", req.params.id);
-        return res.status(404).json({ message: "Chat not found" });
+        return res.status(400).json({ message: "Chat not found" });
       }
       console.log("Chat data:", chat);
       res.status(200).json(chat);

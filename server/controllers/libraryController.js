@@ -21,8 +21,9 @@ const addLibrary = async (req, res) => {
 
 const getLibraryDetails = async (req, res) => {
     try {
-        // Use req.params instead of req.query since you're using /:id in route
+        
         const { id } = req.params;
+        console.log(id)
 
         if (!id) {
             return res.status(400).json({ message: "Library ID is required" });
@@ -33,7 +34,7 @@ const getLibraryDetails = async (req, res) => {
             .lean();
 
         if (!library) {
-            return res.status(404).json({ message: "Library not found" });
+            return res.status(400).json({ message: "Library not found" });
         }
 
         res.status(200).json(library); // Return just the library object directly

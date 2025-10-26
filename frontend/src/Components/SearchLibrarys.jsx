@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import UserHeader from "./UserHeader";
 
 const SearchLibrarys = () => {
-    const [search, setSearch] = useState(localStorage.getItem("search") || "");
+    const [search, setSearch] = useState("");
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
@@ -15,7 +15,7 @@ const SearchLibrarys = () => {
 
         setLoading(true);
         try {
-            const response = await axios.get("http://localhost:5002/library/search-books", {
+            const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/library/search-books`, {
                 params: { query }
             });
 
@@ -50,7 +50,9 @@ const SearchLibrarys = () => {
         <>
         <UserHeader/>
         <div className="min-h-screen w-screen px-4 sm:px-8 py-6 bg-gray-100">
-            
+            <div className="mb-6">
+                <h1 className="flex justify-center">search Books from Different Librarys</h1>
+            </div>
             {/* Search Bar */}
             <div className="mx-auto max-w-3xl bg-white flex  sm:flex-row items-center py-3 px-5 rounded-2xl shadow-lg">
                 <input

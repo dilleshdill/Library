@@ -21,7 +21,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5002/api/auth/signup", // Fixed API route
+        `${import.meta.env.VITE_DOMAIN}/api/auth/signup`, // Fixed API route
         { username,email, password },        
       );
 

@@ -8,6 +8,7 @@ const BooksSchema = new mongoose.Schema({
     category:{type:String,required:true},
     author:{ type:String,required:true },
     rating:{ type:String,required:true },
+    count:{ type:Number,required:true },
     price:{ type:String,required:true },
     available: { type: Boolean, default: true },
     libraryId: { type: mongoose.Schema.Types.ObjectId, ref: "Library", required: true },

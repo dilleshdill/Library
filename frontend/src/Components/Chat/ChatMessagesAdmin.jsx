@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5002", {
+const socket = io(`${import.meta.env.VITE_SOCKET_DOMAIN}`, {
   autoConnect: false,
   withCredentials: true,
   transports: ["websocket"],
@@ -22,14 +22,19 @@ export default function ChatMessagesAdmin() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const formatTime = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+
   // Fetch messages for the current chat
   useEffect(() => {
     const getMessages = async () => {
       try {
         const chatId = id;
-        const res = await axios.get(`http://localhost:5002/chat/${chatId}`);
+        const res = await axios.get(`${import.meta.env.VITE_DOMAIN}/chat/${chatId}`);
         console.log("Chat details:", res.data);
-        const response = await axios.get(`http://localhost:5002/message/${id}`);
+        const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/message/${id}`);
         // Get receiver ID from email
         const receiver = localStorage.getItem("libraryId");
         
@@ -57,6 +62,7 @@ export default function ChatMessagesAdmin() {
     }
   }, [id]);
 
+  
   // Send a new message
   const sendMessage = async () => {
     if (!text.trim()) return; // Prevent sending empty messages
@@ -69,7 +75,7 @@ export default function ChatMessagesAdmin() {
       };
 
       const response = await axios.post(
-        "http://localhost:5002/message",
+        `${import.meta.env.VITE_DOMAIN}/message`,
         newMessage
       );
 
@@ -103,13 +109,20 @@ export default function ChatMessagesAdmin() {
             )}
 
             <div
-              className={`rounded-xl p-4 shadow-md max-w-lg ${
+              className={`rounded-md p-2 flex gap-3 items-center shadow-md max-w-lg  ${
                 msg.senderId === userId
                   ? "bg-blue-500 text-white"
                   : "bg-gray-100 text-gray-700"
               }`}
             >
-              {msg.text}
+              <p>{msg.text}</p>
+              <span
+                className={`block text-xs mt-1 text-right ${
+                  msg.senderId === userId ? "text-white/70" : "text-gray-500"
+                }`}
+              >
+                {formatTime(msg.createdAt)}
+              </span>
             </div>
 
             {msg.senderId === userId && (

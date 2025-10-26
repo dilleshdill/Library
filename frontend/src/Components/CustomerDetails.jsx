@@ -91,7 +91,7 @@ const CustomerDetails = ({ selectedAddress }) => {
 
   const saveAddress = async () => {
     try {
-        const response = await axios.post("http://localhost:5002/address/edit", {
+        const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/address/edit`, {
             _id: selectedAddress._id,
             email,
             name,

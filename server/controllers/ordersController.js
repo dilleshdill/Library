@@ -9,7 +9,7 @@ export const viewOrders = async (req, res) => {
         if (!email) return res.status(400).json({ message: "Email is required" });
 
         const user = await OrdersModel.findOne({ email });
-        if (!user) return res.status(404).json({ message: "User not found" });
+        if (!user) return res.status(400).json({ message: "User not found" });
 
         return res.status(200).json(user.orders);
     } catch (error) {
@@ -34,7 +34,7 @@ export const removeOrder = async (req, res) => {
         );
 
         if (!updatedUser) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(400).json({ message: "User not found" });
         }
 
         return res.status(200).json({ message: "Order removed successfully", orders: updatedUser.orders });

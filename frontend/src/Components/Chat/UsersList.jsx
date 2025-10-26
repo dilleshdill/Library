@@ -13,13 +13,13 @@ export default function UsersList() {
       try {
         const libId = localStorage.getItem("libraryId");
 
-        const user =  await axios.get(`http://localhost:5002/library/${libId}`);
+        const user =  await axios.get(`${import.meta.env.VITE_DOMAIN}/library/${libId}`);
         console.log("User details:", user.data.admin._id);
         // setUserId(user.data.admin._id)
         const userId = user.data.admin._id; // Replace with the actual user ID you want to use
         console.log("User ID:", userId);
         // Fetch conversations
-        const response = await axios.get(`http://localhost:5002/chat/${userId}`);
+        const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/chat/${userId}`);
         console.log("Conversations:", response.data);
 
         // Extract members and corresponding chatId excluding the current userId
@@ -32,7 +32,7 @@ export default function UsersList() {
         // Fetch user details for each member
         const userDetails = await Promise.all(
           filteredMembers.map(async ({ memberId }) => {
-            const res = await axios.get(`http://localhost:5002/api/auth/byid/${memberId}`);
+            const res = await axios.get(`${import.meta.env.VITE_DOMAIN}/api/auth/byid/${memberId}`);
             // console.log("User details:", res.data);
             return res.data;
           })

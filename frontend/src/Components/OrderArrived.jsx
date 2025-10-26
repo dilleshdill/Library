@@ -15,7 +15,7 @@ const OrderArrived = () => {
       try {
         const email = localStorage.getItem("email");
         const response = await axios.get(
-          `http://localhost:5002/orders/details?email=${email}&orderId=${orderId}`
+          `${import.meta.env.VITE_DOMAIN}/orders/details?email=${email}&orderId=${orderId}`
         );
         setOrder(response.data);
       } catch (error) {

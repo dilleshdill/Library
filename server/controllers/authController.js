@@ -67,7 +67,7 @@ const getUserDetails = async (req, res) => {
         const user = await userRegisterModel.findById(userId).populate("reservedBooks.bookId").populate("reservedBooks.libraryId"); // Fetch user with populated reservedBooks
         
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(400).json({ message: "User not found" });
         }
 
         res.json(user);
@@ -82,7 +82,7 @@ const getUserId = async (req, res) => {
     try {
         const user = await userRegisterModel.findOne({ email });
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(400).json({ error: "User not found" });
         }
 
         res.status(200).json({ id: user._id });
@@ -234,7 +234,7 @@ const getUserDetailsByEmail = async (req, res) => {
         console.log(user)
 
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(400).json({ message: "User not found" });
         }
 
         res.status(200).json({ message: "User details found", user });
@@ -258,7 +258,7 @@ const getUserDetailsById = async (req, res) => {
         console.log(user)
 
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(400).json({ message: "User not found" });
         }
 
         res.status(200).json({ message: "User details found", user });

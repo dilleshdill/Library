@@ -15,9 +15,10 @@ const Dashboard = () =>{
                 return;
             }
 
-            const response = await axios.get(`http://localhost:5002/library?libraryId=${libraryId}`);
-            console.log(response.data.library.name);
-            setLibraryName(response.data.library.name)
+            const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/library/${libraryId}`);
+            console.log(response.data)
+            console.log(response.data.name);
+            setLibraryName(response.data.name)
         } catch (error) {
             console.error("Error fetching library details:", error);
         }

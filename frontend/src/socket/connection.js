@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-const SOCKET_DOMAIN = "http://localhost:5002";
+const SOCKET_DOMAIN = import.meta.env.VITE_SOCKET_DOMAIN;
 
 const SOCKET_URL = SOCKET_DOMAIN; 
 const socket = io(SOCKET_URL, {

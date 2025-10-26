@@ -48,11 +48,11 @@ const ProductDetails = () => {
       try {
         if (!email) return;
 
-        const response = await axios.get(`http://localhost:5002/admin/book-details/${_id}`);
+        const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/admin/book-details/${_id}`);
         if (response.status === 200) {
           setBook(response.data);
 
-          const cartResponse = await axios.get(`http://localhost:5002/favorite?email=${email}`);
+          const cartResponse = await axios.get(`${import.meta.env.VITE_DOMAIN}/favorite?email=${email}`);
           const updatedItem = cartResponse.data.find((item) => item.book_name === response.data.book_name);
 
           if (updatedItem) {
@@ -88,7 +88,7 @@ const ProductDetails = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5002/favorite/increment", {
+      const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/favorite/increment`, {
         book_name,
         email,
         count: action === "increment" ? counter + 1 : counter - 1,
@@ -112,7 +112,7 @@ const ProductDetails = () => {
       }
       const libraryId = localStorage.getItem("selectedLibrary")
       console.log(libraryId)
-      const response = await axios.post("http://localhost:5002/favorite", {
+      const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/favorite`, {
         email,
         book_name: book.book_name,
         bookId:book._id,
@@ -201,11 +201,14 @@ const ProductDetails = () => {
               <span className="text-2xl font-bold mr-2">${book.price}</span>
             </div>
 
-            <div className="flex flex-col gap-4 md:flex-row items-center  pt-5 space-x-4 border-b-2 border-gray-300 pb-5">
+            <div className="flex flex-col gap-4 md:flex-row items-center   pt-5 space-x-4 border-b-2 border-gray-300 pb-5">
             {buy ? (
+              <>
               <div onClick={() => toggleFavorite(book)} className="bg-gray-800 text-white md:w-[30%] flex justify-center items-center px-6 py-2 rounded cursor-pointer">
                 Add To Cart
               </div>
+              <div onClick={()=>navigateTOBooking(book._id)} className=" text-black border-1 md:w-[30%] flex justify-center items-center px-6 py-2 rounded cursor-pointer">Reserve</div>
+              </>
             ) : (
               <div>
                 <div className="flex items-center space-x-3">
@@ -224,10 +227,12 @@ const ProductDetails = () => {
                   <button onClick={() => toggleFavorite(book)} className="!bg-gray-500 text-white px-6 py-2 rounded">
                     Remove
                   </button>
+                  <div onClick={()=>navigateTOBooking(book._id)} className=" text-black border-1 md:w-[30%] flex justify-center items-center px-6 py-2 rounded cursor-pointer">Reserve</div>
                 </div>
+                
               </div>
             )}
-            <div onClick={()=>navigateTOBooking(book._id)} className=" text-black border-1 md:w-[30%] flex justify-center items-center px-6 py-2 rounded cursor-pointer">Reserve</div>
+            
             </div>
           </div>
         </div>

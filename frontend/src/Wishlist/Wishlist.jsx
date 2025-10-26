@@ -16,7 +16,7 @@ const Wishlist = () => {
             try {
                 const email = localStorage.getItem("email");
                 if (email) {
-                    const response = await axios.get(`http://localhost:5002/books/wishlist?email=${email}`);
+                    const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/books/wishlist?email=${email}`);
                     setBooks(response.data);
                 }
                 else{
@@ -46,7 +46,7 @@ const Wishlist = () => {
     const toRemove = async (book_name) => {
         const email = localStorage.getItem("email");
         try {
-            const response = await axios.post("http://localhost:5002/books/wishlist/remove", { book_name, email });
+            const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/books/wishlist/remove`, { book_name, email });
             if (response.status === 200) {
                 setBooks(books.filter((item) => item.book_name !== book_name));
                 showToast("Removed from Wishlist","info")

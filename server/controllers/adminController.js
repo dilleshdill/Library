@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import adminModel from "../models/adminModel.js";
 import Library from "../models/libraryModel.js";
@@ -18,17 +18,17 @@ const adminLogin = async (req, res) => {
     // Find admin by email
     const admin = await adminModel.findOne({ email });
 
-    if (!admin) return res.status(404).json({ message: "Admin not found" });
+    if (!admin) return res.status(400).json({ message: "Admin not found" });
 
     // Compare password
     const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
     // Find the library that this admin manages
     const library = await Library.findOne({ admin: admin._id });
 
     if (!library) {
-      return res.status(403).json({ message: "No library assigned to this admin" });
+      return res.status(400).json({ message: "No library assigned to this admin" });
     }
 
     // Generate JWT token (attach library ID)
@@ -69,7 +69,7 @@ const addAdmin = async (req, res) => {
     const newUser = await adminModel.create({ username, email, password: hashedPassword });
 
     const token = generateUserToken(newUser);
-    res.status(201).json({ message: "User registered successfully", token, user: newUser });
+    res.status(200).json({ message: "User registered successfully", token, user: newUser });
   } catch (error) {
     res.status(500).json({ message: "Error registering user", error });
   }
@@ -99,7 +99,7 @@ const deleteReservation = async (req, res) => {
   try {
       const { userId, reservationId } = req.body;
 
-
+      
       if (!userId || !reservationId) {
           return res.status(400).json({ message: "User ID and Reservation ID are required" });
       }
@@ -108,7 +108,7 @@ const deleteReservation = async (req, res) => {
       const user = await userRegisterModel.findById({_id:userId});
 
       if (!user) {
-          return res.status(404).json({ message: "User not found" });
+          return res.status(400).json({ message: "User not found" });
       }
 
       // Filter out the reservation that matches reservationId
@@ -126,7 +126,7 @@ const deleteReservation = async (req, res) => {
       console.log(user.reservedBooks)
 
       if (!seatUpdated) {
-          return res.status(404).json({ message: "Reservation not found" });
+          return res.status(400).json({ message: "Reservation not found" });
       }
       
 
@@ -151,7 +151,7 @@ const getAdminDetails = async (req, res) => {
     console.log(admin)
 
     if (!admin) {
-      return res.status(404).json({ message: "Admin not found" });
+      return res.status(400).json({ message: "Admin not found" });
     }
 
     res.status(200).json({ message: "Admin details found", admin });

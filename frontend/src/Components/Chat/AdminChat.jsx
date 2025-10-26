@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import UsersList from "./UsersList";
 import ChatMessages from "./ChatMessages";
 import axios from "axios";
-const socket = io("http://localhost:5002", {
+const socket = io(`${import.meta.env.VITE_SOCKET_DOMAIN}`, {
   autoConnect: true,
   withCredentials: true,
   transports: ["websocket"],

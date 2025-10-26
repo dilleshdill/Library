@@ -35,7 +35,7 @@ const app = express();
 // CORS Setup
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: ["http://localhost:5173", "http://localhost:5174",process.env.FRONTEND_DOMAIN],
     credentials: true,
   })
 );
@@ -44,7 +44,7 @@ app.use(
 const server = http.createServer(app);
 export const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: ["http://localhost:5173", "http://localhost:5174",process.env.FRONTEND_DOMAIN],
     credentials: true,
   },
 });

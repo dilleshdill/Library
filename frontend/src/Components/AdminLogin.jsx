@@ -10,7 +10,7 @@ const AdminLogin = () => {
   const toLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5002/admin/login", { email, password },
+      const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/admin/login`, { email, password },
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,  // ✅ Include credentials (cookies)

@@ -15,15 +15,15 @@ export default function LibrarysList() {
         
         // Get receiver ID from email
         const receiver = localStorage.getItem("email");
-        const registerRes = await axios.get(`http://localhost:5002/api/auth/getid/${receiver}`);
+        const registerRes = await axios.get(`${import.meta.env.VITE_DOMAIN}/api/auth/getid/${receiver}`);
         const receiverId = registerRes.data.user._id;
 
         // Get libraries list
-        const response = await axios.get("http://localhost:5002/library/getlist");
+        const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/library/getlist`);
         const libraries = response.data.library || [];
 
         // Get existing chats for this user
-        const existingChatsRes = await axios.get(`http://localhost:5002/chat/${receiverId}`);
+        const existingChatsRes = await axios.get(`${import.meta.env.VITE_DOMAIN}/chat/${receiverId}`);
         const existingChats = existingChatsRes.data.chats || [];
 
         // Process libraries and find/create chats
@@ -47,7 +47,7 @@ export default function LibrarysList() {
 
             // Create new chat if none exists
             try {
-              const chatRes = await axios.post("http://localhost:5002/chat", {
+              const chatRes = await axios.post(`${import.meta.env.VITE_DOMAIN}/chat`, {
                 senderId: lib.admin,
                 receiverId: receiverId,
               });
@@ -98,7 +98,7 @@ export default function LibrarysList() {
             onClick={() => navigate(`/userchat/${library.chatId}`)}
           >
             <div className="font-semibold text-sm md:text-base">{library.name}</div>
-            <div className="text-xs text-gray-500">Chat with admin</div>
+            <div className="text-xs ">Chat with admin</div>
           </div>
         ))}
       </div>

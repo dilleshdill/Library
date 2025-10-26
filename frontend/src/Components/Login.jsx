@@ -25,7 +25,7 @@ const Login = () => {
     event.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5002/api/auth/login",
+        `${import.meta.env.VITE_DOMAIN}/api/auth/login`,
         { email, password },
         {
           headers: { "Content-Type": "application/json" },

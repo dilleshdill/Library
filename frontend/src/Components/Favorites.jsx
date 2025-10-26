@@ -17,7 +17,7 @@ const Favorite = () => {
             const email = localStorage.getItem("email");
             try {
                 if (email) {
-                    const response = await axios.get(`http://localhost:5002/favorite?email=${email}`);
+                    const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/favorite?email=${email}`);
                     setCart(response.data);
                     console.log(response.data)
                 }
@@ -43,7 +43,7 @@ const Favorite = () => {
     const removeItem = async (bookId) => {
         const email = localStorage.getItem("email");
         try {
-            const response = await axios.post("http://localhost:5002/favorite/remove", { bookId, email });
+            const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/favorite/remove`, { bookId, email });
             if (response.status === 200) {
                 setCart(cart.filter((item) => item.bookId !== bookId));
                 showToast("Remove From Cart","info")
@@ -66,7 +66,7 @@ const Favorite = () => {
         const updatedItem = cart.find(item => item.book_name === book_name);
 
         try {
-            const response = await axios.post("http://localhost:5002/favorite/increment", {
+            const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/favorite/increment`, {
                 book_name,
                 email,
                 count: updatedItem.count + 1
@@ -94,7 +94,7 @@ const Favorite = () => {
 
         if (updatedItem.count > 1) {
             try {
-                const response = await axios.post("http://localhost:5002/favorite/increment", {
+                const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/favorite/increment`, {
                     book_name,
                     email,
                     count: updatedItem.count - 1

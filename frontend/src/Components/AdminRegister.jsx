@@ -46,7 +46,7 @@ const AdminRegister = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5002/admin/register", {
+      const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/admin/register`, {
         username,
         email,
         password,

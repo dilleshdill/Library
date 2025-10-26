@@ -80,7 +80,7 @@ const Reserved = () => {
         }));
     
         try {
-            const response = await axios.post('http://localhost:5002/slotbooking', {
+            const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/slotbooking`, {
                 libraryId: libraryid,
                 dimension: formattedDimension, // Correctly structured dimension array
                 selected

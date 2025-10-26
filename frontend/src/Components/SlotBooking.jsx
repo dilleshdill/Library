@@ -47,7 +47,7 @@ const SlotBooking = () => {
                     return false;
                 }
         
-                const response = await axios.post('http://localhost:5002/library/getTimings', { libraryId });
+                const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/library/getTimings`, { libraryId });
         
                 if (response.status === 200) {
                     console.log("Successfully fetched library timings",response.data);
@@ -69,7 +69,7 @@ const SlotBooking = () => {
     const fetchedList = async () => {
         const selectedLibrary = localStorage.getItem("selectedLibrary");
         try {
-            const response = await axios.post("http://localhost:5002/slotbooking/getslotdetailes", { selectedLibrary });
+            const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/slotbooking/getslotdetailes`, { selectedLibrary });
             if (response.status === 200) {
                 const updatedData = response.data.user.dimension.map(eachItem => ({ grids: eachItem.grids }));
                 setFloorData(updatedData);
@@ -83,7 +83,7 @@ const SlotBooking = () => {
     const fetchedBookingList = async () => {
         try {
             const libraryId = localStorage.getItem('selectedLibrary');
-            const response = await axios.post('http://localhost:5002/slotbooking/getBookingSlots', { libraryId });
+            const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/slotbooking/getBookingSlots`, { libraryId });
     
             if (response.status === 200) {
                 console.log(response.data);
@@ -188,7 +188,7 @@ const SlotBooking = () => {
                 endTime,
                 status:"Approved",
             };
-            const response = await axios.post('http://localhost:5002/api/auth/reserve-book', {
+            const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/api/auth/reserve-book`, {
                 data, email
             });
             if (response.status === 200) {

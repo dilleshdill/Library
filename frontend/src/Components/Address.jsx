@@ -84,7 +84,7 @@ const AddressForm = () => {
     try {
       const email = localStorage.getItem("email");
       const response = await axios.get(
-        `http://localhost:5002/address?email=${email}`
+        `${VITE_DOMAIN}/address?email=${email}`
       );
       if (response.status === 200) {
         setAddress(response.data);
@@ -103,7 +103,7 @@ const AddressForm = () => {
       const email = localStorage.getItem("email");
       if (!email) return;
 
-      await axios.post("http://localhost:5002/address", {
+      await axios.post(`${import.meta.env.VITE_DOMAIN}/address`, {
         email,
         name,
         phone_no,
@@ -136,7 +136,7 @@ const AddressForm = () => {
         return;
       }
       const response = await axios.post(
-        "http://localhost:5002/address/remove",
+        `${import.meta.env.VITE_DOMAIN}/address/remove`,
         { email, _id }
       );
       if (response.status === 200) {
