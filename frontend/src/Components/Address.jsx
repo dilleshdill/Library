@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Stepper from "./Stepper";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import CustomerDetails from "./CustomerDetails";

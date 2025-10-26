@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import SearchBar from "./SearchBar";
 import UserHeader from "./UserHeader";
 import ViewBooks from "./ViewBooks";
-import Author from "./author";
-import axios from "axios";
+
 
 const Books = () => {
   const genreFilters = [

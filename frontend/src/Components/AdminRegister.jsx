@@ -1,9 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
-import { IoLogoGithub } from "react-icons/io";
-import { FaFacebook } from "react-icons/fa";
+
 
 const AdminRegister = () => {
   const [email, setEmail] = useState("");

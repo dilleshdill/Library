@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { MdOutlineChair } from "react-icons/md";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import { time } from "framer-motion";
+
 
 const SlotBooking = () => {
     const location = useLocation();

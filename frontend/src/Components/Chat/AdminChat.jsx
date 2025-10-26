@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import UserHeader from "../UserHeader";
 import { io } from "socket.io-client";
-import { useNavigate } from "react-router-dom";
 import UsersList from "./UsersList";
-import ChatMessages from "./ChatMessages";
-import axios from "axios";
+
 const socket = io(`${import.meta.env.VITE_SOCKET_DOMAIN}`, {
   autoConnect: true,
   withCredentials: true,
