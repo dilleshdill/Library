@@ -108,7 +108,7 @@ const PaymentButton = () => {
 
       // Razorpay Options
       const options = {
-        key: "rzp_test_VokWRKJcLaw2Fy", // Replace with live key in production
+        key: "your_key", // Replace with live key in production
         amount: order.amount,
         currency: order.currency,
         name: "EliteAI Tools",
@@ -141,8 +141,8 @@ const PaymentButton = () => {
         },
         prefill: {
           name: "Dillesh",
-          email: "dillesh@gmail.com",
-          contact: "6305008717",
+          email: "sample@gmail.com",
+          contact: "1234567890",
         },
         theme: {
           color: "#3399cc",
