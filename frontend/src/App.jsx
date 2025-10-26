@@ -29,7 +29,7 @@ import Orders from './Components/Orders';
 import OrderArrived from './Components/OrderArrived';
 import SearchLibrarys from './Components/SearchLibrarys';
 import Reserved from './Components/Reserved';
-import SlotBooking from './Components/slotBooking';
+import SlotBooking from './Components/SlotBooking';
 import AdminReservations from './Components/AdminReservations';
 import UserSelectedChat from './Components/Chat/UserSelectedChat';
 import MaintainBooks from './Components/MaintainBooks';
